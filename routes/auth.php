@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'auth'], function () {
+    //? Authentication Routes
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
@@ -11,12 +12,14 @@ Route::group(['prefix' => 'auth'], function () {
     Route::get('/verify-email/{id}/{hash}', [AuthController::class, 'verifyEmail'])->middleware('signed')->name('verification.verify');
     Route::post('/resend-verification-email', [AuthController::class, 'resendVerificationEmail']);
 
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    // Protected Routes
+    Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
+        //? User Authentication Management Routes
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/me', [AuthController::class, 'me']);
         Route::post('/refresh', [AuthController::class, 'refreshToken']);
 
-        // Device management routes
+        //? Device management routes
         Route::get('devices', [AuthController::class, 'getUserDevices']);
         Route::delete('devices/{deviceId}', [AuthController::class, 'revokeDevice']);
         Route::delete('devices', [AuthController::class, 'revokeAllDevices']);

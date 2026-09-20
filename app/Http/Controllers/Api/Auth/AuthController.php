@@ -22,57 +22,59 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
+    // register a new user
     public function register(RegisterRequest $request)
     {
-        $data = $this->authService->register($request->validated());
+        $result = $this->authService->register($request->validated());
 
-        return $this->successResponse($data, 'User registered successfully', 201);
+        return $this->finalResponse($result);
     }
 
+    // login a user and return a token
     public function login(LoginRequest $request)
     {
-        $data = $this->authService->login($request->validated());
+        $result = $this->authService->login($request->validated());
 
-        if (!$data) {
-            return $this->errorResponse('The provided credentials are incorrect.', 401);
-        }
-
-        return $this->successResponse($data, 'User logged in successfully');
+        return $this->finalResponse($result);
     }
 
+    // logout a user and invalidate the token
     public function logout(Request $request)
     {
         $result = $this->authService->logout($request);
-        return $this->successResponse(null, $result['message']);
+        return $this->finalResponse($result);
     }
 
+    // refresh the token
     public function refreshToken()
     {
-        $data = $this->authService->refreshToken();
-        return $this->successResponse($data, 'Token refreshed successfully');
+        $result = $this->authService->refreshToken();
+        return $this->finalResponse($result);
     }
 
+    // get the authenticated user's details
     public function me(Request $request)
     {
-        return $this->successResponse(['user' => $request->user()], 'User details retrieved successfully');
+        $result = $this->authService->me($request);
+        return $this->finalResponse($result);
     }
 
+    // send a password reset link to the user
     public function forgotPassword(ForgetPasswordRequest $request)
     {
-        $data = $this->authService->forgotPassword($request->validated()['email']);
+        $result = $this->authService->forgotPassword($request->validated()['email']);
 
-        if($data['success'] === false) {
-            return $this->errorResponse($data['message']);
-        }
-        return $this->successResponse(null, $data['message']);
+        return $this->finalResponse($result);
     }
 
+    // reset the user's password
     public function resetPassword(ResetPasswordRequest $request)
     {
-        $data = $this->authService->resetPassword($request->validated());
-        return $this->successResponse(null, $data['message']);
+        $result = $this->authService->resetPassword($request->validated());
+        return $this->finalResponse($result);
     }
 
+    // verify the user's email
     public function verifyEmail(Request $request)
     {
         $result = $this->authService->verifyEmail($request->route('id'), $request->route('hash'));
@@ -83,6 +85,7 @@ class AuthController extends Controller
         return $this->successResponse(null, $result['message']);
     }
 
+    // resend the email verification link to the user
     public function resendVerificationEmail(Request $request)
     {
         $validated = $request->validate([
@@ -96,28 +99,24 @@ class AuthController extends Controller
         return $this->successResponse(null, $result['message']);
     }
 
-    public function getUserDevices(Request $request)
+    // get the authenticated user's devices
+    public function getUserDevices()
     {
-        $devices = $this->authService->getUserDevices();
-        return $this->successResponse($devices, 'User devices retrieved successfully');
+        $result = $this->authService->getUserDevices();
+        return $this->finalResponse($result);
     }
 
+    // revoke a specific device for the authenticated user
     public function revokeDevice(string $deviceId)
     {
         $result = $this->authService->revokeDevice($deviceId);
-        if(!$result['success']) {
-            return $this->errorResponse($result['message']);
-        }
-        return $this->successResponse(null, 'Device revoked successfully');
+        return $this->finalResponse($result);
     }
 
+    // revoke all devices for the authenticated user
     public function revokeAllDevices()
     {
-
         $result = $this->authService->revokeAllDevices();
-        if(!$result['success']) {
-            return $this->errorResponse($result['message']);
-        }
-        return $this->successResponse(null, 'All devices revoked successfully');
+        return $this->finalResponse($result);
     }
 }
