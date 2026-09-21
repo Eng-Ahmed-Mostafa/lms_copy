@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers\Api\Academic;
 
-use App\Interface\Api\Academic\AcademicYearInterface;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Academic\TermRequest;
+use App\Interface\Api\Academic\TermInterface;
 use App\Trait\ResponseTrait;
-use App\Http\Requests\Academic\AcademicYearRequest;
+use Illuminate\Http\Request;
 
-class AcademicYearController extends Controller
+class TermController extends Controller
 {
     use ResponseTrait;
 
-    protected ?AcademicYearInterface $academicYearService;
+    protected ?TermInterface $termService;
 
-    public function __construct(AcademicYearInterface $academicYearService)
+    public function __construct(TermInterface $termService)
     {
-        $this->academicYearService = $academicYearService;
+        $this->termService = $termService;
     }
 
     /**
@@ -23,16 +24,16 @@ class AcademicYearController extends Controller
      */
     public function index()
     {
-        $result = $this->academicYearService->index();
+        $result = $this->termService->index();
         return $this->finalResponse($result);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(AcademicYearRequest $request)
+    public function store(TermRequest $request)
     {
-        $result = $this->academicYearService->store($request->validated());
+        $result = $this->termService->store($request->validated());
         return $this->finalResponse($result);
     }
 
@@ -41,16 +42,16 @@ class AcademicYearController extends Controller
      */
     public function show(string $id)
     {
-        $result = $this->academicYearService->show($id);
+        $result = $this->termService->show($id);
         return $this->finalResponse($result);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(AcademicYearRequest $request, string $id)
+    public function update(TermRequest $request, string $id)
     {
-        $result = $this->academicYearService->update($id, $request->validated());
+        $result = $this->termService->update($request->validated(), $id);
         return $this->finalResponse($result);
     }
 
@@ -59,7 +60,7 @@ class AcademicYearController extends Controller
      */
     public function destroy(string $id)
     {
-        $result = $this->academicYearService->destroy($id);
+        $result = $this->termService->destroy($id);
         return $this->finalResponse($result);
     }
 
@@ -68,7 +69,7 @@ class AcademicYearController extends Controller
      */
     public function activate(string $id)
     {
-        $result = $this->academicYearService->activate($id);
+        $result = $this->termService->activate($id);
         return $this->finalResponse($result);
     }
 
@@ -77,16 +78,7 @@ class AcademicYearController extends Controller
      */
     public function deactivate(string $id)
     {
-        $result = $this->academicYearService->deactivate($id);
-        return $this->finalResponse($result);
-    }
-
-    /**
-     * Get the current academic year.
-     */
-    public function getCurrentAcademicYear()
-    {
-        $result = $this->academicYearService->getCurrentAcademicYear();
+        $result = $this->termService->deactivate($id);
         return $this->finalResponse($result);
     }
 }
