@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Repository\Api\User;
-
 use App\Interface\Api\User\RoleInterface;
 use App\Trait\RepositoryTrait;
 use Illuminate\Support\Facades\Auth;
@@ -11,12 +10,14 @@ class RoleRepository implements RoleInterface
 {
     use RepositoryTrait;
 
+    // get all roles
     public function index()
     {
         $roles = Role::get();
         return $this->returnData(true, 'Roles retrieved successfully', 200, $roles);
     }
 
+    // create a new role
     public function store(array $data)
     {
         $role = Role::create([
@@ -26,6 +27,7 @@ class RoleRepository implements RoleInterface
         return $this->returnData(true, 'Role created successfully', 201, $role);
     }
 
+    // get a specific role by ID
     public function show(string $id)
     {
         $role = Role::find($id);
@@ -35,6 +37,7 @@ class RoleRepository implements RoleInterface
         return $this->returnData(true, 'Role retrieved successfully', 200, $role);
     }
 
+    // update a specific role by ID
     public function update(string $id, array $data)
     {
         $role = Role::find($id);
@@ -48,6 +51,7 @@ class RoleRepository implements RoleInterface
         return $this->returnData(true, 'Role updated successfully', 200, $role);
     }
 
+    // delete a specific role by ID
     public function destroy(string $id)
     {
         $role = Role::find($id);
@@ -58,6 +62,7 @@ class RoleRepository implements RoleInterface
         return $this->returnData(true, 'Role deleted successfully', 200);
     }
 
+    // Role Permissions Management
     public function getPermissions(string $id)
     {
         $role = Role::find($id);
@@ -68,6 +73,7 @@ class RoleRepository implements RoleInterface
         return $this->returnData(true, 'Permissions retrieved successfully', 200, $permissions);
     }
 
+    // Assign permissions to a role
     public function assignPermissions(string $id, array $permissions)
     {
         $role = Role::find($id);
@@ -78,6 +84,7 @@ class RoleRepository implements RoleInterface
         return $this->returnData(true, 'Permissions assigned successfully', 200);
     }
 
+    // Remove a permission from a role
     public function removePermissions(string $id, string $permission)
     {
         $role = Role::find($id);

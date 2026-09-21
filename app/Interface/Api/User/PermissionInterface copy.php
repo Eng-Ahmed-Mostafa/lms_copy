@@ -2,7 +2,7 @@
 
 namespace App\Interface\Api\User;
 
-interface RoleInterface
+interface PermissionInterface
 {
     // CRUD Operations
     public function index();
@@ -10,9 +10,4 @@ interface RoleInterface
     public function show(string $id);
     public function update(string $id, array $data);
     public function destroy(string $id);
-
-    // Role Permissions Management
-    public function getPermissions(string $id);
-    public function assignPermissions(string $id, array $permissions);
-    public function removePermissions(string $id, string $permission);
 }
