@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Interface\Api\Academic\AcademicYearInterface;
 use App\Interface\Api\Auth\AuthInterface;
 use App\Interface\Api\User\PermissionInterface;
 use App\Interface\Api\User\RoleInterface;
 use App\Interface\Api\User\UserInterface;
+use App\Repository\Api\Academic\AcademicYearRepository;
 use App\Repository\Api\Auth\AuthRepository;
 use App\Repository\Api\User\PermissionRepository;
 use App\Repository\Api\User\RoleRepository;
@@ -37,6 +39,11 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             PermissionInterface::class,
             PermissionRepository::class
+        );
+
+        $this->app->bind(
+            AcademicYearInterface::class,
+            AcademicYearRepository::class
         );
     }
 
