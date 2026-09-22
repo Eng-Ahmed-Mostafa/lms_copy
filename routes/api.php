@@ -8,3 +8,4 @@ require __DIR__.'/permission.php';
 require __DIR__.'/academic_year.php';
 require __DIR__.'/term.php';
 require __DIR__.'/grade.php';
+require __DIR__.'/classroom.php';
