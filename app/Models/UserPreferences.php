@@ -24,6 +24,7 @@ class UserPreferences extends Model
         'push_notifications' => 'boolean',
     ];
 
+    // Relationships
     public function user()
     {
         return $this->belongsTo(User::class);

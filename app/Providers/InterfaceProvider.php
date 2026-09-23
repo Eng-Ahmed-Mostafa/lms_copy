@@ -8,6 +8,7 @@ use App\Interface\Api\Academic\GradeInterface;
 use App\Interface\Api\Academic\SubjectInterface;
 use App\Interface\Api\Academic\TermInterface;
 use App\Interface\Api\Auth\AuthInterface;
+use App\Interface\Api\People\StudentInterface;
 use App\Interface\Api\People\TeacherInterface;
 use App\Interface\Api\User\PermissionInterface;
 use App\Interface\Api\User\RoleInterface;
@@ -18,6 +19,7 @@ use App\Repository\Api\Academic\ClassroomRepository;
 use App\Repository\Api\Academic\GradeRepository;
 use App\Repository\Api\Academic\SubjectRepository;
 use App\Repository\Api\Auth\AuthRepository;
+use App\Repository\Api\People\StudentRepository;
 use App\Repository\Api\People\TeacherRepository;
 use App\Repository\Api\User\PermissionRepository;
 use App\Repository\Api\User\RoleRepository;
@@ -79,6 +81,11 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             TeacherInterface::class,
             TeacherRepository::class
+        );
+
+        $this->app->bind(
+            StudentInterface::class,
+            StudentRepository::class
         );
     }
 

@@ -5,7 +5,7 @@ namespace App\Http\Requests\People;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class TeacherRequest extends FormRequest
+class StudentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +25,12 @@ class TeacherRequest extends FormRequest
         $isUpdate = $this->isMethod("put") || $this->isMethod("patch");
         return [
             "user_id" => [$isUpdate ? "sometimes" : "required", "integer"],
-            "employee_number" => [$isUpdate ? "sometimes" : "required", "string","max:255", "unique:teachers,employee_number," . ($isUpdate ? $this->route('teacher')?->id : '')],
-            "bio" => ["nullable","string"],
-            "qualification" => ["nullable","string"],
-            "specialization" => ["nullable","string"],
-            "experience_years" => ["nullable","integer"],
-            "hire_date" => ["nullable","date"],
-            "status" => [$isUpdate ? "sometimes" : "required", "in:active,inactive"],
+            "student_number" => [$isUpdate ? "sometimes" : "required", "string","max:255", "unique:students,student_number," . ($isUpdate ? $this->route('student')?->id : '')],
+            "grade_id" => [$isUpdate ? "sometimes" : "required", "integer"],
+            "classroom_id" => [$isUpdate ? "sometimes" : "required", "integer"],
+            "academic_year_id" => [$isUpdate ? "sometimes" : "required", "integer"],
+            "enrollment_date" => ["nullable","date"],
+            "status" => [$isUpdate? 'sometimes' : 'required', "in:pending,active,inactive,suspended,graduated"],
         ];
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Interface\Api\People;
 
-interface TeacherInterface
+interface StudentInterface
 {
     // curd operations
     public function index();

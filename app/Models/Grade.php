@@ -21,4 +21,10 @@ class Grade extends Model
     {
         return 'slug';
     }
+
+    // Relationships
+    public function classrooms()
+    {
+        return $this->hasMany(Classroom::class);
+    }
 }

@@ -16,13 +16,16 @@ class LoginAttempts extends Model
         'attempted_at',
     ];
 
+    // Casts
     protected $casts = [
         'successful' => 'boolean',
         'attempted_at' => 'datetime',
     ];
 
+    // Disable timestamps for this model
     public $timestamps = false;
 
+    // Relationships
     public function user()
     {
         return $this->belongsTo(User::class);

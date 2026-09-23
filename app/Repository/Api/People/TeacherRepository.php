@@ -10,12 +10,14 @@ class TeacherRepository implements TeacherInterface
 {
     use RepositoryTrait;
 
+    // get all teachers
     public function index()
     {
         $teachers = Teacher::get();
         return $this->returnData(true, 'Teachers retrieved successfully', 200, $teachers);
     }
 
+    // create a new teacher
     public function store(array $data)
     {
         $teacher = Teacher::create([
@@ -31,6 +33,7 @@ class TeacherRepository implements TeacherInterface
         return $this->returnData(true, 'Teacher created successfully', 201, $teacher);
     }
 
+    // get a specific teacher
     public function show(int $id)
     {
         $teacher = Teacher::find($id);
@@ -40,6 +43,7 @@ class TeacherRepository implements TeacherInterface
         return $this->returnData(true, 'Teacher retrieved successfully', 200, $teacher);
     }
 
+    // update a specific teacher
     public function update(int $id, array $data)
     {
         $teacher = Teacher::find($id);
@@ -61,6 +65,7 @@ class TeacherRepository implements TeacherInterface
         return $this->returnData(true, 'Teacher updated successfully', 200, $teacher);
     }
 
+    // delete a specific teacher
     public function destroy(int $id)
     {
         $teacher = Teacher::find($id);

@@ -19,4 +19,20 @@ class AcademicYear extends Model
         'end_date' => 'date',
         'is_current' => 'boolean',
     ];
+
+    // Relationships
+    public function terms()
+    {
+        return $this->hasMany(Term::class);
+    }
+
+    public function students()
+    {
+        return $this->hasMany(Student::class);
+    }
+
+    public function classrooms()
+    {
+        return $this->hasMany(Classroom::class);
+    }
 }
