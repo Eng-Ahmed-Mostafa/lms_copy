@@ -11,4 +11,7 @@ Route::group(['prefix' => 'teachers', 'middleware' => ['auth:sanctum', 'verified
     Route::put('/{id}', [TeacherController::class, 'update']);
     Route::patch('/{id}', [TeacherController::class, 'update']);
     Route::delete('/{id}', [TeacherController::class, 'destroy']);
+
+    //? Student Routes Management
+    Route::get('/{id}/students', [TeacherController::class, 'getStudents']);
 });

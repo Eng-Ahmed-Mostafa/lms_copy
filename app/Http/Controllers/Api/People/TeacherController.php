@@ -62,4 +62,13 @@ class TeacherController extends Controller
         $result = $this->teacherService->destroy($id);
         return $this->finalResponse($result);
     }
+
+    /**
+     * Get students associated with a specific teacher.
+     */
+    public function getStudents(string $id)
+    {
+        $result = $this->teacherService->getStudents($id);
+        return $this->finalResponse($result);
+    }
 }

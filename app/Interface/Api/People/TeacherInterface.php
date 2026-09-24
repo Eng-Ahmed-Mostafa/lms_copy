@@ -10,4 +10,7 @@ interface TeacherInterface
     public function show(int $id);
     public function update(int $id, array $data);
     public function destroy(int $id);
+
+    // get students associated with a specific teacher
+    public function getStudents(int $id);
 }

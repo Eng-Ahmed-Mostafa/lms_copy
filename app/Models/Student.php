@@ -48,4 +48,10 @@ class Student extends Model
                     ->withPivot('relationship', 'is_primary', 'can_view_grades', 'can_view_attendance', 'can_view_payments', 'can_receive_notifications')
                     ->withTimestamps();
     }
+
+    public function teachers()
+    {
+        return $this->belongsToMany(Teacher::class, 'student_teacher', 'student_id', 'teacher_id')
+                    ->withTimestamps();
+    }
 }

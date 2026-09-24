@@ -76,4 +76,15 @@ class TeacherRepository implements TeacherInterface
         $teacher->delete();
         return $this->returnData(true, 'Teacher deleted successfully', 200);
     }
+
+    // get students associated with a specific teacher
+    public function getStudents(int $id)
+    {
+        $teacher = Teacher::find($id);
+        if (!$teacher) {
+            return $this->returnData(false, 'Teacher not found', 404);
+        }
+        $students = $teacher->students;
+        return $this->returnData(true, 'Students retrieved successfully', 200, $students);
+    }
 }
