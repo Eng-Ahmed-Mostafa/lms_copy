@@ -41,4 +41,11 @@ class Student extends Model
     {
         return $this->belongsTo(AcademicYear::class);
     }
+
+    public function guardians()
+    {
+        return $this->belongsToMany(Guardian::class, 'guardian_student')
+                    ->withPivot('relationship', 'is_primary', 'can_view_grades', 'can_view_attendance', 'can_view_payments', 'can_receive_notifications')
+                    ->withTimestamps();
+    }
 }

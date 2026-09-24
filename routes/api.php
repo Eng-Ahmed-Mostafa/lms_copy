@@ -12,3 +12,4 @@ require __DIR__.'/classroom.php';
 require __DIR__.'/subject.php';
 require __DIR__.'/teacher.php';
 require __DIR__.'/student.php';
+require __DIR__.'/guardian.php';
