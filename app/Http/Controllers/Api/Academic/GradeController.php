@@ -63,4 +63,31 @@ class GradeController extends Controller
         $result = $this->gradeService->destroy($slug);
         return $this->finalResponse($result);
     }
+
+    /**
+     * Get Classrooms for a specific Grade.
+     */
+    public function getClassrooms(string $slug)
+    {
+        $result = $this->gradeService->getClassrooms($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get Students for a specific Grade.
+     */
+    public function getStudents(string $slug)
+    {
+        $result = $this->gradeService->getStudents($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get Subjects for a specific Grade.
+     */
+    public function getSubjects(string $slug)
+    {
+        $result = $this->gradeService->getSubjects($slug);
+        return $this->finalResponse($result);
+    }
 }

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('icon')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('grade_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

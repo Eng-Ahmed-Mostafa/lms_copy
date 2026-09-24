@@ -28,4 +28,10 @@ class Subject extends Model
     {
         return 'slug';
     }
+
+    // Relationships
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class);
+    }
 }

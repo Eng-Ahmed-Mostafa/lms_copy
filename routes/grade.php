@@ -10,4 +10,9 @@ Route::group(['prefix' => 'grades', 'middleware' => ['auth:sanctum', 'verified']
     Route::get('/{slug}', [GradeController::class, 'show']);
     Route::put('/{slug}', [GradeController::class, 'update']);
     Route::delete('/{slug}', [GradeController::class, 'destroy']);
+
+    //? Additional Routes for Grade
+    Route::get('/{slug}/classrooms', [GradeController::class, 'getClassrooms']);
+    Route::get('/{slug}/students', [GradeController::class, 'getStudents']);
+    Route::get('/{slug}/subjects', [GradeController::class, 'getSubjects']);
 });

@@ -67,4 +67,37 @@ class GradeRepository implements GradeInterface
         $grade->delete();
         return $this->returnData(true, 'Grade deleted successfully', 200);
     }
+
+    // get classrooms for a specific grade by slug
+    public function getClassrooms(string $slug)
+    {
+        $grade = Grade::where('slug', $slug)->first();
+        if (!$grade) {
+            return $this->returnData(false, 'Grade not found', 404);
+        }
+        $classrooms = $grade->classrooms;
+        return $this->returnData(true, 'Classrooms retrieved successfully', 200, $classrooms);
+    }
+
+    // get students for a specific grade by slug
+    public function getStudents(string $slug)
+    {
+        $grade = Grade::where('slug', $slug)->first();
+        if (!$grade) {
+            return $this->returnData(false, 'Grade not found', 404);
+        }
+        $students = $grade->students;
+        return $this->returnData(true, 'Students retrieved successfully', 200, $students);
+    }
+
+    // get subjects for a specific grade by slug
+    public function getSubjects(string $slug)
+    {
+        $grade = Grade::where('slug', $slug)->first();
+        if (!$grade) {
+            return $this->returnData(false, 'Grade not found', 404);
+        }
+        $subjects = $grade->subjects;
+        return $this->returnData(true, 'Subjects retrieved successfully', 200, $subjects);
+    }
 }
