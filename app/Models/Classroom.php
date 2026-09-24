@@ -31,4 +31,9 @@ class Classroom extends Model
     {
         return $this->belongsTo(AcademicYear::class);
     }
+
+    public function students()
+    {
+        return $this->belongsToMany(Student::class, 'classroom_student', 'classroom_id', 'student_id');
+    }
 }

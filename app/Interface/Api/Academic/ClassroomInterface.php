@@ -10,4 +10,9 @@ interface ClassroomInterface
     public function show(string $id);
     public function update(string $id, array $data);
     public function destroy(string $id);
+
+    // additional methods for classroom
+    public function getStudents(string $id);
+    public function addStudent(string $id, array $data);
+    public function removeStudent(string $id, string $studentId);
 }

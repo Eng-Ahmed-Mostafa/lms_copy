@@ -4,6 +4,7 @@ namespace App\Repository\Api\Academic;
 
 use App\Interface\Api\Academic\ClassroomInterface;
 use App\Models\Classroom;
+use App\Models\Student;
 use App\Trait\RepositoryTrait;
 
 class ClassroomRepository implements ClassroomInterface
@@ -71,5 +72,49 @@ class ClassroomRepository implements ClassroomInterface
 
         $classroom->delete();
         return $this->returnData(true, 'Classroom deleted successfully', 200);
+    }
+
+    // get students of a specific classroom
+    public function getStudents(string $id)
+    {
+        $classroom = Classroom::with('students')->find($id);
+        if (!$classroom) {
+            return $this->returnData(false, 'Classroom not found', 404);
+        }
+        return $this->returnData(true, 'Students retrieved successfully', 200, $classroom->students);
+    }
+
+    // add a student to a specific classroom
+    public function addStudent(string $id, array $data)
+    {
+        $classroom = Classroom::find($id);
+        if (!$classroom) {
+            return $this->returnData(false, 'Classroom not found', 404);
+        }
+
+        $student = Student::find($data['student_id']);
+        if (!$student) {
+            return $this->returnData(false, 'Student not found', 404);
+        }
+
+        $classroom->students()->syncWithoutDetaching($student->id);
+        return $this->returnData(true, 'Student added to classroom successfully', 200);
+    }
+
+    // remove a student from a specific classroom
+    public function removeStudent(string $id, string $studentId)
+    {
+        $classroom = Classroom::find($id);
+        if (!$classroom) {
+            return $this->returnData(false, 'Classroom not found', 404);
+        }
+
+        $student = Student::find($studentId);
+        if (!$student) {
+            return $this->returnData(false, 'Student not found', 404);
+        }
+
+        $classroom->students()->detach($student->id);
+        return $this->returnData(true, 'Student removed from classroom successfully', 200);
     }
 }

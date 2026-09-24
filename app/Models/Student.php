@@ -32,9 +32,9 @@ class Student extends Model
         return $this->belongsTo(Grade::class);
     }
 
-    public function classroom()
+    public function classrooms()
     {
-        return $this->belongsTo(Classroom::class);
+        return $this->belongsToMany(Classroom::class, 'classroom_student', 'student_id', 'classroom_id');
     }
 
     public function academicYear()

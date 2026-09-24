@@ -10,4 +10,9 @@ Route::group(['prefix' => 'classrooms', 'middleware' => ['auth:sanctum', 'verifi
     Route::get('/{id}', [ClassroomController::class, 'show']);
     Route::put('/{id}', [ClassroomController::class, 'update']);
     Route::delete('/{id}', [ClassroomController::class, 'destroy']);
+
+    //? Additional Routes for Classroom
+    Route::get('/{id}/students', [ClassroomController::class, 'getStudents']);
+    Route::post('/{id}/students', [ClassroomController::class, 'addStudent']);
+    Route::delete('/{id}/students/{studentId}', [ClassroomController::class, 'removeStudent']);
 });

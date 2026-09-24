@@ -63,4 +63,35 @@ class ClassroomController extends Controller
         $result = $this->classroomService->destroy($id);
         return $this->finalResponse($result);
     }
+
+    /**
+     * Get students of a specific classroom.
+     */
+    public function getStudents(string $id)
+    {
+        $result = $this->classroomService->getStudents($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Add a student to a specific classroom.
+     */
+    public function addStudent(Request $request, string $id)
+    {
+        $validatedData = $request->validate([
+            'student_id' => 'required|exists:students,id',
+        ]);
+
+        $result = $this->classroomService->addStudent($id, $validatedData);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Remove a student from a specific classroom.
+     */
+    public function removeStudent(string $id, string $studentId)
+    {
+        $result = $this->classroomService->removeStudent($id, $studentId);
+        return $this->finalResponse($result);
+    }
 }
