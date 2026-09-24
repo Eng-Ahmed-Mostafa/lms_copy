@@ -63,4 +63,13 @@ class SubjectController extends Controller
         $result = $this->subjectService->destroy($slug);
         return $this->finalResponse($result);
     }
+
+    /**
+     * Get teachers associated with a specific subject.
+     */
+    public function getTeachers(string $slug)
+    {
+        $result = $this->subjectService->getTeachers($slug);
+        return $this->finalResponse($result);
+    }
 }

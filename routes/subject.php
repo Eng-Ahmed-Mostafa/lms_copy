@@ -10,4 +10,7 @@ Route::group(['prefix' => 'subjects', 'middleware' => ['auth:sanctum', 'verified
     Route::get('/{slug}', [SubjectController::class, 'show']);
     Route::put('/{slug}', [SubjectController::class, 'update']);
     Route::delete('/{slug}', [SubjectController::class, 'destroy']);
+
+    //? Subject-Teacher Routes
+    Route::get('/{slug}/teachers', [SubjectController::class, 'getTeachers']);
 });

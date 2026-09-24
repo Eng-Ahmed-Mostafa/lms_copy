@@ -10,4 +10,7 @@ interface SubjectInterface
     public function show(string $slug);
     public function update(array $data, string $slug);
     public function destroy(string $slug);
+
+    // get teachers associated with a specific subject
+    public function getTeachers(string $slug);
 }

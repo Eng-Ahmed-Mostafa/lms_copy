@@ -55,4 +55,15 @@ class SubjectRepository implements SubjectInterface
         $subject->delete();
         return $this->returnData(true, 'Subject deleted successfully', 200);
     }
+
+    // get teachers associated with a specific subject
+    public function getTeachers(string $slug)
+    {
+        $subject = Subject::where('slug', $slug)->first();
+        if (!$subject) {
+            return $this->returnData(false, 'Subject not found', 404);
+        }
+        $teachers = $subject->teachers;
+        return $this->returnData(true, 'Teachers retrieved successfully', 200, $teachers);
+    }
 }
