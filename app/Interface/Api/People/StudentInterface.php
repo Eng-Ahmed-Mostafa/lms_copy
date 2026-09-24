@@ -10,4 +10,7 @@ interface StudentInterface
     public function show(int $id);
     public function update(int $id, array $data);
     public function destroy(int $id);
+
+    // relationship operations
+    public function getTeachers(int $id);
 }
