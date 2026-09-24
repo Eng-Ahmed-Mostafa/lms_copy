@@ -92,47 +92,11 @@ class GuardianController extends Controller
     }
 
     /**
-     * Get the progress of a child for a guardian.
+     * Get the Grades for a specific child of a guardian.
      */
-    public function getChildProgress(string $guardianId, string $childId)
+    public function getGradesForChild(string $guardianId, string $childId)
     {
-        $result = $this->guardianService->getChildProgress($guardianId, $childId);
-        return $this->finalResponse($result);
-    }
-
-    /**
-     * Get the grades of a child for a guardian.
-     */
-    public function getChildGrades(string $guardianId, string $childId)
-    {
-        $result = $this->guardianService->getChildGrades($guardianId, $childId);
-        return $this->finalResponse($result);
-    }
-
-    /**
-     * Get the attendance of a child for a guardian.
-     */
-    public function getChildAttendance(string $guardianId, string $childId)
-    {
-        $result = $this->guardianService->getChildAttendance($guardianId, $childId);
-        return $this->finalResponse($result);
-    }
-
-    /**
-     * Get the assignments of a child for a guardian.
-     */
-    public function getChildAssignments(string $guardianId, string $childId)
-    {
-        $result = $this->guardianService->getChildAssignments($guardianId, $childId);
-        return $this->finalResponse($result);
-    }
-
-    /**
-     * Get the payments of a child for a guardian.
-     */
-    public function getChildPayments(string $guardianId, string $childId)
-    {
-        $result = $this->guardianService->getChildPayments($guardianId, $childId);
+        $result = $this->guardianService->getGradesForChild($guardianId, $childId);
         return $this->finalResponse($result);
     }
 }

@@ -15,4 +15,7 @@ interface GuardianInterface
     public function getChildren(int $guardianId);
     public function addChild(int $guardianId, array $data);
     public function removeChild(int $guardianId, int $childId);
+
+    // child Show Functions
+    public function getGradesForChild(int $guardianId, int $childId);
 }

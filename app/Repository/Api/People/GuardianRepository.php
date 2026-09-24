@@ -117,4 +117,20 @@ class GuardianRepository implements GuardianInterface
 
         return $this->returnData(true, 'Child removed successfully', 200);
     }
+
+    // get grades for a specific child of a guardian
+    public function getGradesForChild(int $guardianId, int $childId)
+    {
+        $guardian = Guardian::find($guardianId);
+        if (!$guardian) {
+            return $this->returnData(false, 'Guardian not found', 404);
+        }
+
+        $child = $guardian->children()->find($childId);
+        if (!$child) {
+            return $this->returnData(false, 'Child not found', 404);
+        }
+
+        return $this->returnData(true, 'Grades retrieved successfully', 200, $child->grade);
+    }
 }

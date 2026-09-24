@@ -15,4 +15,7 @@ Route::group(['prefix' => 'guardians', 'middleware' => ['auth:sanctum', 'verifie
     Route::get('/{id}/children', [GuardianController::class, 'getChildren']);
     Route::post('/{id}/children', [GuardianController::class, 'addChild']);
     Route::delete('/{id}/children/{childId}', [GuardianController::class, 'removeChild']);
+
+    //? Grades Management Routes
+    Route::get('/{id}/children/{childId}/grades', [GuardianController::class, 'getGradesForChild']);
 });
