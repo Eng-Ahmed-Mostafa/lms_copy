@@ -40,4 +40,9 @@ class Subject extends Model
         return $this->belongsToMany(Teacher::class, 'subject_teacher', 'subject_id', 'teacher_id')
                     ->withTimestamps();
     }
+
+    public function courses()
+    {
+        return $this->hasMany(Course::class);
+    }
 }

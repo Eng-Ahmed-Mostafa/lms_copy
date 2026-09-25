@@ -9,6 +9,7 @@ use App\Interface\Api\Academic\SubjectInterface;
 use App\Interface\Api\Academic\TermInterface;
 use App\Interface\Api\Auth\AuthInterface;
 use App\Interface\Api\Courses\CourseCategoryInterface;
+use App\Interface\Api\Courses\CourseInterface;
 use App\Interface\Api\People\GuardianInterface;
 use App\Interface\Api\People\StudentInterface;
 use App\Interface\Api\People\TeacherInterface;
@@ -22,6 +23,7 @@ use App\Repository\Api\Academic\GradeRepository;
 use App\Repository\Api\Academic\SubjectRepository;
 use App\Repository\Api\Auth\AuthRepository;
 use App\Repository\Api\Courses\CourseCategoryRepository;
+use App\Repository\Api\Courses\CourseRepository;
 use App\Repository\Api\People\GuardianRepository;
 use App\Repository\Api\People\StudentRepository;
 use App\Repository\Api\People\TeacherRepository;
@@ -100,6 +102,11 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             CourseCategoryInterface::class,
             CourseCategoryRepository::class
+        );
+
+        $this->app->bind(
+            CourseInterface::class,
+            CourseRepository::class
         );
     }
 

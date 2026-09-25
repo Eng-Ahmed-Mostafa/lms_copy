@@ -9,16 +9,17 @@ class SlugObserver
 {
     public function creating(Model $model): void
     {
-        if (!empty($model->slug)) {
+        if ($model->getAttribute('slug')) {
             return;
         }
 
-        $model->slug = $this->generateUniqueSlug($model);
+        $model->setAttribute('slug', $this->generateUniqueSlug($model));
     }
 
     private function generateUniqueSlug(Model $model): string
     {
-        $baseSlug = Str::slug($model->name);
+        $name = $model->getAttribute('name') ?? $model->getAttribute('title');
+        $baseSlug = Str::slug($name);
         $slug = $baseSlug;
         $counter = 1;
 
