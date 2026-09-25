@@ -13,3 +13,4 @@ require __DIR__.'/subject.php';
 require __DIR__.'/teacher.php';
 require __DIR__.'/student.php';
 require __DIR__.'/guardian.php';
+require __DIR__.'/course_category.php';
