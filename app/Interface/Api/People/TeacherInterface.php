@@ -11,6 +11,7 @@ interface TeacherInterface
     public function update(int $id, array $data);
     public function destroy(int $id);
 
-    // get students associated with a specific teacher
+    // relationship operations
+    public function getCourses(int $id);
     public function getStudents(int $id);
 }
