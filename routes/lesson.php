@@ -13,6 +13,9 @@ Route::group(['prefix' => 'lessons', 'middleware' => ['auth:sanctum', 'verified'
     Route::put('/{id}', [LessonController::class, 'update']);
     Route::delete('/{id}', [LessonController::class, 'destroy']);
 
+    //? Lesson Content Management
+    Route::get('/{id}/contents', [LessonController::class, 'getContents']);
+
     //? Lesson Version Management
     Route::get('/{id}/versions', [LessonController::class, 'getVersions']);
     Route::post('/{id}/versions', [LessonController::class, 'createVersion']);

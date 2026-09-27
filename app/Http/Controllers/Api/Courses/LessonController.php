@@ -67,6 +67,15 @@ class LessonController extends Controller
     }
 
     /**
+     * Get the content of a specific lesson.
+     */
+    public function getContents(string $id)
+    {
+        $result = $this->lessonService->getContents($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
      * Get all versions of a specific lesson.
      */
     public function getVersions(string $id)

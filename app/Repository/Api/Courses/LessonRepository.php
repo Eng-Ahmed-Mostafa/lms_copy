@@ -81,6 +81,27 @@ class LessonRepository implements LessonInterface
         return $this->returnData(true, 'Lesson deleted successfully', 200, null);
     }
 
+    // get the content of a specific lesson
+    public function getContents(string $id)
+    {
+        $lesson = Lesson::with(['versions.contents'])->where('id', $id)->first();
+        if (!$lesson) {
+            return $this->returnData(false, 'Lesson not found', 404, null);
+        }
+
+        $version = $lesson->versions()->latest()->first();
+        if (!$version) {
+            return $this->returnData(false, 'No versions found for this lesson', 404, null);
+        }
+
+        $contents = $version->contents()->orderBy('order', 'asc')->get();
+        if (!$contents) {
+            return $this->returnData(false, 'No content found for the first version of this lesson', 404, null);
+        }
+
+        return $this->returnData(true, 'Lesson content retrieved successfully', 200, $contents);
+    }
+
     // get all versions of a lesson
     public function getVersions(string $id)
     {
