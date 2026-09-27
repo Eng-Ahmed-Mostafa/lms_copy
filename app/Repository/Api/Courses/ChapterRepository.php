@@ -67,4 +67,49 @@ class ChapterRepository implements ChapterInterface
         $chapter->delete();
         return $this->returnData(true, 'Chapter deleted successfully', 200, null);
     }
+
+    // get lessons for a specific chapter
+    public function getLessons(string $id)
+    {
+        $chapter = Chapter::with('lessons')->find($id);
+        if (!$chapter) {
+            return $this->returnData(false, 'Chapter not found', 404);
+        }
+        $lessons = $chapter->lessons;
+        return $this->returnData(true, 'Lessons retrieved successfully', 200, $lessons);
+    }
+
+    // add a lesson to a specific chapter
+    public function addLesson(array $data, string $id)
+    {
+        $chapter = Chapter::with('lessons')->find($id);
+        if (!$chapter) {
+            return $this->returnData(false, 'Chapter not found', 404);
+        }
+        $lesson = $chapter->lessons()->create([
+            'title' => $data['title'],
+            'description' => $data['description'] ?? null,
+            'type' => $data['type'] ?? null,
+            'duration' => $data['duration'] ?? null,
+            'order' => $data['order'] ?? null,
+            'is_free' => $data['is_free'] ?? false,
+            'status' => $data['status'],
+            'approval_status' => $data['approval_status'] ?? 'draft',
+            'published_at' => $data['status'] === 'published' ? now() : null,
+        ]);
+        return $this->returnData(true, 'Lesson added successfully', 201, $lesson);
+    }
+
+    // reorder chapters
+    public function reorder(array $data, string $id)
+    {
+        $chapter = Chapter::find($id);
+        if (!$chapter) {
+            return $this->returnData(false, 'Chapter not found', 404);
+        }
+        $chapter->update([
+            'order' => $data['order'],
+        ]);
+        return $this->returnData(true, 'Chapter reordered successfully', 200, $chapter);
+    }
 }

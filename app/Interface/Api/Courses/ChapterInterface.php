@@ -10,4 +10,11 @@ interface ChapterInterface
     public function show(string $id);
     public function update(array $data, string $id);
     public function destroy(string $id);
+
+    //? Chapter Lessons Management
+    public function getLessons(string $id);
+    public function addLesson(array $data, string $id);
+
+    //? Reorder Chapters
+    public function reorder(array $data, string $id);
 }

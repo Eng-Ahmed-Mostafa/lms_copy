@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Courses;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\ChapterRequest;
+use App\Http\Requests\Courses\LessonRequest;
 use App\Interface\Api\Courses\ChapterInterface;
 use App\Trait\ResponseTrait;
 use Illuminate\Http\Request;
@@ -61,6 +62,36 @@ class ChapterController extends Controller
     public function destroy(string $id)
     {
         $result = $this->chapterService->destroy($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get lessons for a specific chapter.
+     */
+    public function getLessons(string $id)
+    {
+        $result = $this->chapterService->getLessons($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Add a lesson to a specific chapter.
+     */
+    public function addLesson(LessonRequest $request, string $id)
+    {
+        $result = $this->chapterService->addLesson($request->validated(), $id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Reorder chapters.
+     */
+    public function reorder(Request $request, string $id)
+    {
+        $validationData = $request->validate([
+            'order' => 'required|integer|min:0',
+        ]);
+        $result = $this->chapterService->reorder($validationData, $id);
         return $this->finalResponse($result);
     }
 }

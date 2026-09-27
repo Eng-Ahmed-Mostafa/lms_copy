@@ -12,4 +12,11 @@ Route::group(['prefix' => 'chapters', 'middleware' => ['auth:sanctum', 'verified
     Route::get('/{id}', [ChapterController::class, 'show']);
     Route::put('/{id}', [ChapterController::class, 'update']);
     Route::delete('/{id}', [ChapterController::class, 'destroy']);
+
+    //? Chapter Lessons Management
+    Route::get('/{id}/lessons', [ChapterController::class, 'getLessons']);
+    Route::post('/{id}/lessons', [ChapterController::class, 'addLesson']);
+
+    //? Reorder Chapters
+    Route::post('/{id}/reorder', [ChapterController::class, 'reorder']);
 });
