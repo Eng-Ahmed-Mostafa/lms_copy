@@ -34,4 +34,9 @@ class Lesson extends Model
     {
         return $this->belongsTo(Chapter::class);
     }
+
+    public function versions()
+    {
+        return $this->hasMany(LessonVersion::class);
+    }
 }
