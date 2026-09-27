@@ -32,4 +32,9 @@ class LessonVersion extends Model
     {
         return $this->belongsTo(User::class, 'approved_by');
     }
+
+    public function contents()
+    {
+        return $this->hasMany(LessonContent::class);
+    }
 }
