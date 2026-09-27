@@ -65,6 +65,15 @@ class SubjectController extends Controller
     }
 
     /**
+     * Get courses associated with a specific subject.
+     */
+    public function getCourses(string $slug)
+    {
+        $result = $this->subjectService->getCourses($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
      * Get teachers associated with a specific subject.
      */
     public function getTeachers(string $slug)

@@ -11,6 +11,7 @@ Route::group(['prefix' => 'subjects', 'middleware' => ['auth:sanctum', 'verified
     Route::put('/{slug}', [SubjectController::class, 'update']);
     Route::delete('/{slug}', [SubjectController::class, 'destroy']);
 
-    //? Subject-Teacher Routes
+    //? Additional Routes for Subject
+    Route::get('/{slug}/courses', [SubjectController::class, 'getCourses']);
     Route::get('/{slug}/teachers', [SubjectController::class, 'getTeachers']);
 });

@@ -56,6 +56,17 @@ class SubjectRepository implements SubjectInterface
         return $this->returnData(true, 'Subject deleted successfully', 200);
     }
 
+    // get courses associated with a specific subject
+    public function getCourses(string $slug)
+    {
+        $subject = Subject::with('courses')->where('slug', $slug)->first();
+        if (!$subject) {
+            return $this->returnData(false, 'Subject not found', 404);
+        }
+        $courses = $subject->courses;
+        return $this->returnData(true, 'Courses retrieved successfully', 200, $courses);
+    }
+
     // get teachers associated with a specific subject
     public function getTeachers(string $slug)
     {
