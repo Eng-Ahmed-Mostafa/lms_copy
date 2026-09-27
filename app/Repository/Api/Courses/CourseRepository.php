@@ -10,12 +10,14 @@ class CourseRepository implements CourseInterface
 {
     use RepositoryTrait;
 
+    // get all courses
     public function index()
     {
         $courses = Course::with(['teacher', 'subject', 'courseCategory'])->get();
         return $this->returnData(true, 'Courses retrieved successfully', 200, $courses);
     }
 
+    // create a new course
     public function store(array $data)
     {
         $courses = Course::create([
@@ -39,6 +41,7 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Course created successfully', 201, $courses);
     }
 
+    // get a single course
     public function show(string $slug)
     {
         $course = Course::with(['teacher', 'subject', 'courseCategory'])->where('slug', $slug)->first();
@@ -48,6 +51,7 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Course retrieved successfully', 200, $course);
     }
 
+    // update a course
     public function update(array $data, string $slug)
     {
         $course = Course::where('slug', $slug)->first();
@@ -75,6 +79,7 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Course updated successfully', 200, $course);
     }
 
+    // delete a course
     public function destroy(string $slug)
     {
         $course = Course::where('slug', $slug)->first();
@@ -85,6 +90,46 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Course deleted successfully', 200, null);
     }
 
+    // get chapters of a specific course
+    public function getChaptersByCourse(string $slug)
+    {
+        $course = Course::with('chapters')->where('slug', $slug)->first();
+        if (!$course) {
+            return $this->returnData(false, 'Course not found', 404, null);
+        }
+        return $this->returnData(true, 'Chapters retrieved successfully', 200, $course->chapters);
+    }
+
+    // add a chapter to a specific course
+    public function addChapterToCourse(array $data, string $slug)
+    {
+        $course = Course::with('chapters')->where('slug', $slug)->first();
+        if (!$course) {
+            return $this->returnData(false, 'Course not found', 404, null);
+        }
+        $chapter = $course->chapters()->create([
+            'title' => $data['title'],
+            'description' => $data['description'] ?? null,
+            'order' => $data['order'] ?? 0,
+            'status' => $data['status'] ?? 'draft',
+        ]);
+        return $this->returnData(true, 'Chapter added to course successfully', 201, $chapter);
+    }
+
+    // get lessons of a specific course
+    public function getLessonsByCourse(string $slug)
+    {
+        $course = Course::with('chapters.lessons')->where('slug', $slug)->first();
+        if (!$course) {
+            return $this->returnData(false, 'Course not found', 404, null);
+        }
+        $lessons = $course->chapters->flatMap(function ($chapter) {
+            return $chapter->lessons;
+        });
+        return $this->returnData(true, 'Lessons retrieved successfully', 200, $lessons);
+    }
+
+    // get students enrolled in a specific course
     public function getStudentsByCourse(string $slug)
     {
         $course = Course::where('slug', $slug)->first();
@@ -95,6 +140,18 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Students retrieved successfully', 200, $students);
     }
 
+    // submit a specific course for review
+    public function submitCourseForReview(string $slug)
+    {
+        $course = Course::where('slug', $slug)->first();
+        if (!$course) {
+            return $this->returnData(false, 'Course not found', 404, null);
+        }
+        $course->update(['approval_status' => 'pending']);
+        return $this->returnData(true, 'Course submitted for review successfully', 200, $course);
+    }
+
+    // publish a specific course
     public function publishCourse(string $slug)
     {
         $course = Course::where('slug', $slug)->first();
@@ -105,6 +162,7 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Course published successfully', 200, $course);
     }
 
+    // unpublish a specific course
     public function unpublishCourse(string $slug)
     {
         $course = Course::where('slug', $slug)->first();
@@ -115,6 +173,7 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Course unpublished successfully', 200, $course);
     }
 
+    // archive a specific course
     public function archiveCourse(string $slug)
     {
         $course = Course::where('slug', $slug)->first();

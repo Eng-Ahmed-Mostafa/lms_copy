@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Courses;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Courses\ChapterRequest;
 use App\Http\Requests\Courses\CourseRequest;
 use App\Interface\Api\Courses\CourseInterface;
 use App\Trait\ResponseTrait;
@@ -65,11 +66,47 @@ class CourseController extends Controller
     }
 
     /**
+     * Get chapters of a specific course.
+     */
+    public function getChaptersByCourse(string $slug)
+    {
+        $result = $this->courseService->getChaptersByCourse($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Add a chapter to a specific course.
+     */
+    public function addChapterToCourse(ChapterRequest $request, string $slug)
+    {
+        $result = $this->courseService->addChapterToCourse($request->validated(), $slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get lessons of a specific course.
+     */
+    public function getLessonsByCourse(string $slug)
+    {
+        $result = $this->courseService->getLessonsByCourse($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
      * Get students enrolled in a specific course.
      */
     public function getStudentsByCourse(string $slug)
     {
         $result = $this->courseService->getStudentsByCourse($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Submit a specific course for review.
+     */
+    public function submitCourseForReview(string $slug)
+    {
+        $result = $this->courseService->submitCourseForReview($slug);
         return $this->finalResponse($result);
     }
 
