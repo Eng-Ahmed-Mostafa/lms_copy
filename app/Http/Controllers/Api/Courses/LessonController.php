@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Courses;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\LessonRequest;
+use App\Http\Requests\Courses\LessonVersionRequest;
 use App\Interface\Api\Courses\LessonInterface;
 use App\Trait\ResponseTrait;
 use Illuminate\Http\Request;
@@ -62,6 +63,33 @@ class LessonController extends Controller
     public function destroy(string $id)
     {
         $result = $this->lessonService->destroy($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get all versions of a specific lesson.
+     */
+    public function getVersions(string $id)
+    {
+        $result = $this->lessonService->getVersions($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Create a new version for a specific lesson.
+     */
+    public function createVersion(LessonVersionRequest $request, string $id)
+    {
+        $result = $this->lessonService->createVersion($request->validated(), $id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get a specific version of a lesson.
+     */
+    public function getVersion(string $id, string $versionId)
+    {
+        $result = $this->lessonService->getVersion($id, $versionId);
         return $this->finalResponse($result);
     }
 

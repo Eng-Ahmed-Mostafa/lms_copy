@@ -24,12 +24,9 @@ class LessonVersionRequest extends FormRequest
     {
         return [
             'lesson_id' => ['required', 'exists:lessons,id'],
-            'version_number' => ['required', 'integer'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'status' => ['required', 'in:draft,pending_review,approved,rejected,published,archived'],
-            'created_by' => ['required', 'exists:users,id'],
-            'approved_by' => ['nullable', 'exists:users,id'],
             'approved_at' => ['nullable', 'date'],
             'published_at' => ['nullable', 'date'],
         ];

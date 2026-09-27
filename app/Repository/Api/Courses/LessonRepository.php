@@ -5,6 +5,7 @@ namespace App\Repository\Api\Courses;
 use App\Interface\Api\Courses\LessonInterface;
 use App\Models\Lesson;
 use App\Trait\RepositoryTrait;
+use Illuminate\Support\Facades\Auth;
 
 class LessonRepository implements LessonInterface
 {
@@ -78,6 +79,51 @@ class LessonRepository implements LessonInterface
         }
         $lesson->delete();
         return $this->returnData(true, 'Lesson deleted successfully', 200, null);
+    }
+
+    // get all versions of a lesson
+    public function getVersions(string $id)
+    {
+        $lesson = Lesson::with(['versions'])->where('id', $id)->first();
+        if (!$lesson) {
+            return $this->returnData(false, 'Lesson not found', 404, null);
+        }
+        return $this->returnData(true, 'Lesson versions retrieved successfully', 200, $lesson->versions);
+    }
+
+    // create a new version for a lesson
+    public function createVersion(array $data, string $id)
+    {
+        $lesson = Lesson::where('id', $id)->first();
+        if (!$lesson) {
+            return $this->returnData(false, 'Lesson not found', 404, null);
+        }
+        $version = $lesson->versions()->create([
+            'lesson_id' => $id,
+            'version_number' => $lesson->versions()->count() + 1,
+            'title' => $data['title'],
+            'description' => $data['description'] ?? null,
+            'status' => $data['status'] ?? 'draft',
+            'created_by' => Auth::id() ?? null,
+            'approved_by' =>  $data['status'] === 'approved' ? Auth::id() : null,
+            'approved_at' => $data['approved_at'] ?? null,
+            'published_at' => $data['published_at'] ?? null
+        ]);
+        return $this->returnData(true, 'Lesson version created successfully', 201, $version);
+    }
+
+    // get a specific version of a lesson
+    public function getVersion(string $id, string $versionId)
+    {
+        $lesson = Lesson::with(['versions'])->where('id', $id)->first();
+        if (!$lesson) {
+            return $this->returnData(false, 'Lesson not found', 404, null);
+        }
+        $version = $lesson->versions()->where('id', $versionId)->first();
+        if (!$version) {
+            return $this->returnData(false, 'Lesson version not found', 404, null);
+        }
+        return $this->returnData(true, 'Lesson version retrieved successfully', 200, $version);
     }
 
     // submit a lesson for approval

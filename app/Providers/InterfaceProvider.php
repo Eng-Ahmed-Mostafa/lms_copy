@@ -12,6 +12,7 @@ use App\Interface\Api\Courses\ChapterInterface;
 use App\Interface\Api\Courses\CourseCategoryInterface;
 use App\Interface\Api\Courses\CourseInterface;
 use App\Interface\Api\Courses\LessonInterface;
+use App\Interface\Api\Courses\LessonVersionInterface;
 use App\Interface\Api\People\GuardianInterface;
 use App\Interface\Api\People\StudentInterface;
 use App\Interface\Api\People\TeacherInterface;
@@ -28,6 +29,7 @@ use App\Repository\Api\Courses\ChapterRepository;
 use App\Repository\Api\Courses\CourseCategoryRepository;
 use App\Repository\Api\Courses\CourseRepository;
 use App\Repository\Api\Courses\LessonRepository;
+use App\Repository\Api\Courses\LessonVersionRepository;
 use App\Repository\Api\People\GuardianRepository;
 use App\Repository\Api\People\StudentRepository;
 use App\Repository\Api\People\TeacherRepository;
@@ -121,6 +123,11 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             LessonInterface::class,
             LessonRepository::class
+        );
+
+        $this->app->bind(
+            LessonVersionInterface::class,
+            LessonVersionRepository::class
         );
     }
 

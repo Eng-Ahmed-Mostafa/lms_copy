@@ -11,6 +11,11 @@ interface LessonInterface
     public function update(array $data, string $id);
     public function destroy(string $id);
 
+    // Lesson Version Management
+    public function getVersions(string $id);
+    public function createVersion(array $data, string $id);
+    public function getVersion(string $id, string $versionId);
+
     // Additional Lesson Actions
     public function submitForApproval(string $id);
     public function publish(string $id);

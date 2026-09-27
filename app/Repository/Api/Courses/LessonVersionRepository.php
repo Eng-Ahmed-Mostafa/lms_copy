@@ -30,12 +30,12 @@ class LessonVersionRepository implements LessonVersionInterface
         }
         $lessonVersion->update([
             'lesson_id' => $data['lesson_id'] ?? $lessonVersion->lesson_id,
-            'version_number' => $data['version_number'] ?? $lessonVersion->version_number,
+            'version_number' => $lessonVersion->version_number, // Assuming version_number is auto-incremented or managed elsewhere
             'title' => $data['title'] ?? $lessonVersion->title,
             'description' => $data['description'] ?? $lessonVersion->description,
             'status' => $data['status'] ?? $lessonVersion->status,
-            'created_by' => $data['created_by'] ?? $lessonVersion->created_by,
-            'approved_by' => $data['approved_by'] ?? $lessonVersion->approved_by,
+            'created_by' => $lessonVersion->created_by ?? Auth::id(),
+            'approved_by' => $lessonVersion->approved_by ?? ($data['status'] === 'approved' ? Auth::id() : null),
             'approved_at' => $data['approved_at'] ?? $lessonVersion->approved_at,
             'published_at' => $data['published_at'] ?? $lessonVersion->published_at
         ]);
@@ -60,7 +60,7 @@ class LessonVersionRepository implements LessonVersionInterface
         if (!$lessonVersion) {
             return $this->returnData(false, 'Lesson version not found', 404);
         }
-        $lessonVersion->update(['status' => 'submitted']);
+        $lessonVersion->update(['status' => 'pending_review']);
         return $this->returnData(true, 'Lesson version submitted for review', 200, $lessonVersion);
     }
 
