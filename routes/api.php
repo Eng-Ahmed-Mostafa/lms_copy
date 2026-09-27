@@ -16,3 +16,4 @@ require __DIR__.'/guardian.php';
 require __DIR__.'/course_category.php';
 require __DIR__.'/course.php';
 require __DIR__.'/chapter.php';
+require __DIR__.'/lesson.php';
