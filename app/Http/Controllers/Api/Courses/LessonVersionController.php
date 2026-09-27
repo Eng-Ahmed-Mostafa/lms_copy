@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Courses;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Courses\LessonContentRequest;
 use App\Http\Requests\Courses\LessonVersionRequest;
 use App\Interface\Api\Courses\LessonVersionInterface;
 use App\Trait\ResponseTrait;
@@ -43,6 +44,24 @@ class LessonVersionController extends Controller
     public function destroy(string $id)
     {
         $result = $this->lessonVersionService->destroy($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get the content of the specified lesson version.
+     */
+    public function getContents(string $id)
+    {
+        $result = $this->lessonVersionService->getContents($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Add content to the specified lesson version.
+     */
+    public function addContents(LessonContentRequest $request, string $id)
+    {
+        $result = $this->lessonVersionService->addContents($id, $request->validated());
         return $this->finalResponse($result);
     }
 

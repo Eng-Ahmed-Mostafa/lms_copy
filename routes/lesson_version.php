@@ -9,6 +9,10 @@ Route::group(['prefix' => 'lesson-versions', 'middleware' => ['auth:sanctum', 'v
     Route::put('/{id}', [LessonVersionController::class, 'update']);
     Route::delete('/{id}', [LessonVersionController::class, 'destroy']);
 
+    //? Lesson Version Content Management
+    Route::get('/{id}/contents', [LessonVersionController::class, 'getContents']);
+    Route::post('/{id}/contents', [LessonVersionController::class, 'addContents']);
+
     //? Lesson Version Workflow Management
     Route::post('/{id}/submit', [LessonVersionController::class, 'submitForReview']);
     Route::post('/{id}/approve', [LessonVersionController::class, 'approve']);

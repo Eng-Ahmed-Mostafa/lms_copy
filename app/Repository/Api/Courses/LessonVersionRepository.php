@@ -53,6 +53,35 @@ class LessonVersionRepository implements LessonVersionInterface
         return $this->returnData(true, 'Lesson version deleted', 200);
     }
 
+    // get the content of a specific lesson version
+    public function getContents(string $id)
+    {
+        $lessonVersion = LessonVersion::with('contents')->find($id);
+        if (!$lessonVersion) {
+            return $this->returnData(false, 'Lesson version not found', 404);
+        }
+        return $this->returnData(true, 'Lesson version contents retrieved', 200, $lessonVersion->contents);
+    }
+
+    // add content to a specific lesson version
+    public function addContents(string $id, array $data)
+    {
+        $lessonVersion = LessonVersion::find($id);
+        if (!$lessonVersion) {
+            return $this->returnData(false, 'Lesson version not found', 404);
+        }
+        $lessonVersion->contents()->create([
+            'type' => $data['type'] ?? null,
+            'content' => $data['content'] ?? null,
+            'file_path' => $data['file_path'] ?? null,
+            'video_url' => $data['video_url'] ?? null,
+            'duration' => $data['duration'] ?? 0,
+            'order' => $data['order'] ?? 0,
+            'metadata' => $data['metadata'] ?? null,
+        ]);
+        return $this->returnData(true, 'Contents added to lesson version', 200, $lessonVersion->contents);
+    }
+
     // submit a specific lesson version for review
     public function submitForReview(string $id)
     {
