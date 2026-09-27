@@ -90,4 +90,15 @@ class CourseCategoryRepository implements CourseCategoryInterface
         $courseCategory->delete();
         return $this->returnData(true, 'Course Category Deleted Successfully', 200);
     }
+
+    // get courses by category
+    public function getCoursesByCategory(string $slug)
+    {
+        $courseCategory = CourseCategory::with('courses')->where('slug', $slug)->first();
+        if (!$courseCategory) {
+            return $this->returnData(false, 'Course Category Not Found', 404);
+        }
+        $courses = $courseCategory->courses;
+        return $this->returnData(true, 'Retrieved Courses Successfully', 200, $courses);
+    }
 }

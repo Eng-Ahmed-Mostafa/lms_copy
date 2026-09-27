@@ -63,4 +63,13 @@ class CourseCategoryController extends Controller
         $result = $this->courseCategoryService->destroy($slug);
         return $this->finalResponse($result);
     }
+
+    /**
+     * Get courses by category.
+     */
+    public function getCoursesByCategory(string $slug)
+    {
+        $result = $this->courseCategoryService->getCoursesByCategory($slug);
+        return $this->finalResponse($result);
+    }
 }

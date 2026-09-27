@@ -10,4 +10,7 @@ interface CourseCategoryInterface
     public function show(string $slug);
     public function update(string $slug, array $data);
     public function destroy(string $slug);
+
+    // get courses by category
+    public function getCoursesByCategory(string $slug);
 }

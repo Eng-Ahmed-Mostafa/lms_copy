@@ -11,4 +11,7 @@ Route::group(['prefix' => 'course-categories', 'middleware' => ['auth:sanctum', 
     Route::get('/{slug}', [CourseCategoryController::class, 'show']);
     Route::put('/{slug}', [CourseCategoryController::class, 'update']);
     Route::delete('/{slug}', [CourseCategoryController::class, 'destroy']);
+
+    //? Get Courses by Category
+    Route::get('/{slug}/courses', [CourseCategoryController::class, 'getCoursesByCategory']);
 });
