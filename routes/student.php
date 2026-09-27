@@ -12,6 +12,7 @@ Route::group(['prefix' => 'students', 'middleware' => ['auth:sanctum', 'verified
     Route::patch('/{id}', [StudentController::class, 'update']);
     Route::delete('/{id}', [StudentController::class, 'destroy']);
 
-    //? Student-Teacher Relationship Routes
+    //? Additional Routes for Student
+    Route::get('/{id}/courses', [StudentController::class, 'getCourses']);
     Route::get('/{id}/teachers', [StudentController::class, 'getTeachers']);
 });

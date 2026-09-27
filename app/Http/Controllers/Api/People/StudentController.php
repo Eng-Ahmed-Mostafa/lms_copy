@@ -65,6 +65,15 @@ class StudentController extends Controller
     }
 
     /**
+     * Get courses associated with a specific student.
+     */
+    public function getCourses(string $id)
+    {
+        $result = $this->studentService->getCourses($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
      * Get teachers associated with a specific student.
      */
     public function getTeachers(string $id)

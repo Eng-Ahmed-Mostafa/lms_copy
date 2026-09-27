@@ -75,6 +75,17 @@ class StudentRepository implements StudentInterface
         return $this->returnData(true, 'Student deleted successfully', 200);
     }
 
+    // get courses associated with a specific student
+    public function getCourses(int $id)
+    {
+        $student = Student::with('courses')->find($id);
+        if (!$student) {
+            return $this->returnData(false, 'Student not found', 404);
+        }
+        $courses = $student->courses;
+        return $this->returnData(true, 'Courses retrieved successfully', 200, $courses);
+    }
+
     // get teachers associated with a specific student
     public function getTeachers(int $id)
     {

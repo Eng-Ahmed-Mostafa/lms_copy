@@ -12,5 +12,6 @@ interface StudentInterface
     public function destroy(int $id);
 
     // relationship operations
+    public function getCourses(int $id);
     public function getTeachers(int $id);
 }
