@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Courses;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\LessonContentRequest;
+use App\Http\Requests\Public\OrderRequest;
 use App\Interface\Api\Courses\LessonContentInterface;
 use App\Trait\ResponseTrait;
 use Illuminate\Http\Request;
@@ -58,12 +59,9 @@ class LessonContentController extends Controller
     /**
      * Reorder the specified resource in storage.
      */
-    public function reorder(Request $request, string $id)
+    public function reorder(OrderRequest $request, string $id)
     {
-        $validatedData = $request->validate([
-            'order' => 'required|integer|min:1',
-        ]);
-        $result = $this->lessonContentService->reorder($id, $validatedData);
+        $result = $this->lessonContentService->reorder($id, $request->validated());
         return $this->finalResponse($result);
     }
 }

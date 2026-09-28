@@ -30,8 +30,6 @@ class UserController extends Controller
     //  create a new user
     public function store(UserRequest $request)
     {
-        $request->validated();
-
         $result = $this->userService->store($request->validated());
 
         return $this->finalResponse($result);

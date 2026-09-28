@@ -79,10 +79,7 @@ class AuthController extends Controller
     {
         $result = $this->authService->verifyEmail($request->route('id'), $request->route('hash'));
 
-        if(!$result['success']) {
-            return $this->errorResponse($result['message']);
-        }
-        return $this->successResponse(null, $result['message']);
+        return $this->finalResponse($result);
     }
 
     // resend the email verification link to the user
@@ -93,10 +90,7 @@ class AuthController extends Controller
         ]);
 
         $result = $this->authService->resendVerificationEmail($validated['email']);
-        if(!$result['success']) {
-            return $this->errorResponse($result['message']);
-        }
-        return $this->successResponse(null, $result['message']);
+        return $this->finalResponse($result);
     }
 
     // get the authenticated user's devices
