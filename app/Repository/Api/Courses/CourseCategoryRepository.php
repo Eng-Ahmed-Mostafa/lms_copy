@@ -10,6 +10,17 @@ class CourseCategoryRepository implements CourseCategoryInterface
 {
     use RepositoryTrait;
 
+    // search for course categories
+    public function search(array $data)
+    {
+        $courseCategories = CourseCategory::search($data['q'])
+            ->query(function ($query) use ($data) {
+                $query->with(['parent', 'children', 'courses']);
+            })->paginate($data['per_page'] ?? 10);
+            
+        return $this->returnData(true, 'Search Results', 200, $courseCategories);
+    }
+
     // get all course categories
     public function index()
     {

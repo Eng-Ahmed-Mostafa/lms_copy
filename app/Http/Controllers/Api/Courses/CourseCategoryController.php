@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Courses;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\CourseCategoryRequest;
+use App\Http\Requests\Public\SearchRequest;
 use App\Interface\Api\Courses\CourseCategoryInterface;
 use App\Trait\ResponseTrait;
 use Illuminate\Http\Request;
@@ -17,6 +18,15 @@ class CourseCategoryController extends Controller
     public function __construct(CourseCategoryInterface $courseCategoryService)
     {
         $this->courseCategoryService = $courseCategoryService;
+    }
+
+    /**
+     * Search for course categories.
+     */
+    public function search(SearchRequest $request)
+    {
+        $result = $this->courseCategoryService->search($request->validated());
+        return $this->finalResponse($result);
     }
 
     /**

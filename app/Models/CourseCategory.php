@@ -5,13 +5,14 @@ namespace App\Models;
 use App\Observers\SlugObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[ObservedBy(SlugObserver::class)]
 class CourseCategory extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, Searchable;
 
     protected $table = 'course_categories';
 
@@ -27,6 +28,17 @@ class CourseCategory extends Model implements HasMedia
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    // Searchable
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'description' => $this->description,
+        ];
     }
 
     // Relationships
