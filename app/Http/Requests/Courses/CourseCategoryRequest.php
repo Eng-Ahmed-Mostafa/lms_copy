@@ -25,9 +25,9 @@ class CourseCategoryRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
             'parent_id' => ['nullable', 'exists:course_categories,id'],
             'status' => ['required', 'in:active,inactive,archived'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'],
         ];
     }
 }

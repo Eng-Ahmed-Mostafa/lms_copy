@@ -5,15 +5,20 @@ namespace App\Models;
 use App\Observers\SlugObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[ObservedBy(SlugObserver::class)]
-class CourseCategory extends Model
+class CourseCategory extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
+    protected $table = 'course_categories';
+
     protected $fillable = [
         'name',
         'slug',
         'description',
-        'image',
         'parent_id',
         'status',
     ];
@@ -38,5 +43,11 @@ class CourseCategory extends Model
     public function courses()
     {
         return $this->hasMany(Course::class);
+    }
+
+    // Media Library
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('course_category_images')->singleFile();
     }
 }

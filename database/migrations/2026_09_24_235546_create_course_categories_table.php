@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->string('image')->nullable();
             $table->foreignId('parent_id')->nullable()->constrained('course_categories')->onDelete('set null');
             $table->enum('status', ['active', 'inactive', 'archived'])->default('active');
             $table->timestamps();
