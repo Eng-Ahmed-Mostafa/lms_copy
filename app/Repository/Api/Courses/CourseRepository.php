@@ -14,7 +14,7 @@ class CourseRepository implements CourseInterface
     public function index()
     {
         $courses = Course::with(['teacher', 'subject', 'courseCategory'])->get();
-        return $this->returnData(true, 'Courses retrieved successfully', 200, $courses);
+        return $this->returnData(true, 'Courses retrieved successfully', 200, $courses->load('media'));
     }
 
     // create a new course
@@ -27,8 +27,6 @@ class CourseRepository implements CourseInterface
             'title' => $data['title'],
             'short_description' => $data['short_description'],
             'description' => $data['description'],
-            'thumbnail' => $data['thumbnail'],
-            'preview_video' => $data['preview_video'],
             'price' => $data['price'],
             'discount_price' => $data['discount_price'],
             'duration' => $data['duration'],
@@ -38,7 +36,16 @@ class CourseRepository implements CourseInterface
             'approval_status' => $data['approval_status'],
             'published_at' => $data['published_at'],
         ]);
-        return $this->returnData(true, 'Course created successfully', 201, $courses);
+
+        if (!empty($data['thumbnail'])) {
+            $courses->addMedia($data['thumbnail'])->toMediaCollection('course_thumbnail');
+        }
+
+        if (!empty($data['preview_video'])) {
+            $courses->addMedia($data['preview_video'])->toMediaCollection('course_preview_video');
+        }
+
+        return $this->returnData(true, 'Course created successfully', 201, $courses->load('media'));
     }
 
     // get a single course
@@ -48,7 +55,7 @@ class CourseRepository implements CourseInterface
         if (!$course) {
             return $this->returnData(false, 'Course not found', 404, null);
         }
-        return $this->returnData(true, 'Course retrieved successfully', 200, $course);
+        return $this->returnData(true, 'Course retrieved successfully', 200, $course->load('media'));
     }
 
     // update a course
@@ -58,6 +65,7 @@ class CourseRepository implements CourseInterface
         if (!$course) {
             return $this->returnData(false, 'Course not found', 404, null);
         }
+
         $course->update([
             'teacher_id' => $data['teacher_id'] ?? $course->teacher_id,
             'course_category_id' => $data['course_category_id'] ?? $course->course_category_id,
@@ -65,8 +73,6 @@ class CourseRepository implements CourseInterface
             'title' => $data['title'] ?? $course->title,
             'short_description' => $data['short_description'] ?? $course->short_description,
             'description' => $data['description'] ?? $course->description,
-            'thumbnail' => $data['thumbnail'] ?? $course->thumbnail,
-            'preview_video' => $data['preview_video'] ?? $course->preview_video,
             'price' => $data['price'] ?? $course->price,
             'discount_price' => $data['discount_price'] ?? $course->discount_price,
             'duration' => $data['duration'] ?? $course->duration,
@@ -76,7 +82,16 @@ class CourseRepository implements CourseInterface
             'approval_status' => $data['approval_status'] ?? $course->approval_status,
             'published_at' => $data['published_at'] ?? $course->published_at,
         ]);
-        return $this->returnData(true, 'Course updated successfully', 200, $course);
+
+        if (!empty($data['thumbnail'])) {
+            $course->addMedia($data['thumbnail'])->toMediaCollection('course_thumbnail');
+        }
+
+        if (!empty($data['preview_video'])) {
+            $course->addMedia($data['preview_video'])->toMediaCollection('course_preview_video');
+        }
+
+        return $this->returnData(true, 'Course updated successfully', 200, $course->load('media'));
     }
 
     // delete a course

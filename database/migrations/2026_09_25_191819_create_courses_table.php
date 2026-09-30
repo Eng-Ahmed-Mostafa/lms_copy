@@ -20,8 +20,6 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('short_description')->nullable();
             $table->longText('description')->nullable();
-            $table->string('thumbnail', 500)->nullable();
-            $table->string('preview_video', 500)->nullable();
             $table->decimal('price', 12, 2)->default(0.00);
             $table->decimal('discount_price', 12, 2)->nullable();
             $table->integer('duration')->default(0);

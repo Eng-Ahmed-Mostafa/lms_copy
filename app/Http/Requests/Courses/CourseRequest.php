@@ -30,8 +30,6 @@ class CourseRequest extends FormRequest
             "title" => [ $isUpdate ? 'nullable' : 'required', 'string', 'max:255' ],
             "short_description" => [ $isUpdate ? 'nullable' : 'required', 'string', 'max:500' ],
             "description" => [ $isUpdate ? 'nullable' : 'required', 'string' ],
-            "thumbnail" => [ 'nullable', 'string', 'max:255' ],
-            "preview_video" => [ 'nullable', 'string', 'max:255' ],
             "price" => [ $isUpdate ? 'nullable' : 'required', 'numeric', 'min:0' ],
             "discount_price" => [ 'nullable', 'numeric', 'min:0' ],
             "duration" => [ $isUpdate ? 'nullable' : 'required', 'integer', 'min:0' ],
@@ -40,6 +38,8 @@ class CourseRequest extends FormRequest
             "status" => [ $isUpdate ? 'nullable' : 'required', 'string', 'in:active,inactive' ],
             "approval_status" => [ $isUpdate ? 'nullable' : 'required', 'string', 'in:pending,approved,rejected' ],
             "published_at" => [ 'nullable', 'date' ],
+            "thumbnail" => [ 'nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048' ],
+            "preview_video" => [ 'nullable', 'mimes:mp4,mov,avi,wmv', 'max:10240' ],
         ];
     }
 }

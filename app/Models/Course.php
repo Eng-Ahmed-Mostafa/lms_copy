@@ -6,11 +6,13 @@ use App\Observers\SlugObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[ObservedBy(SlugObserver::class)]
-class Course extends Model
+class Course extends Model implements HasMedia
 {
-    use SoftDeletes;
+    use SoftDeletes, InteractsWithMedia;
 
     protected $fillable = [
         'teacher_id',
@@ -20,8 +22,6 @@ class Course extends Model
         'slug',
         'short_description',
         'description',
-        'thumbnail',
-        'preview_video',
         'price',
         'discount_price',
         'duration',
@@ -70,5 +70,12 @@ class Course extends Model
     public function students()
     {
         return $this->belongsToMany(Student::class, 'course_student')->withTimestamps();
+    }
+
+    // Media Collections
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('course_thumbnail')->singleFile();
+        $this->addMediaCollection('course_preview_video')->singleFile();
     }
 }
