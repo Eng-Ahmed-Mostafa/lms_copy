@@ -6,13 +6,14 @@ use App\Observers\SlugObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Scout\Searchable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 #[ObservedBy(SlugObserver::class)]
 class Course extends Model implements HasMedia
 {
-    use SoftDeletes, InteractsWithMedia;
+    use SoftDeletes, InteractsWithMedia, Searchable;
 
     protected $fillable = [
         'teacher_id',
@@ -44,6 +45,23 @@ class Course extends Model implements HasMedia
     public function getRouteKeyName()
     {
         return 'slug';
+    }
+
+    // Searchable
+    public function toSearchableArray()
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'slug' => $this->slug,
+            'short_description' => $this->short_description,
+            'description' => $this->description,
+            'price' => $this->price,
+            'discount_price' => $this->discount_price,
+            'duration' => $this->duration,
+            'level' => $this->level,
+            'language' => $this->language,
+        ];
     }
 
     // Relationships

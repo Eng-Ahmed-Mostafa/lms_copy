@@ -10,6 +10,16 @@ class CourseRepository implements CourseInterface
 {
     use RepositoryTrait;
 
+    // search for courses
+    public function search(array $data)
+    {
+        $courses = Course::search($data['q'])
+            ->query(function ($query) use ($data) {
+                $query->with(['teacher', 'subject', 'courseCategory']);
+            })->paginate($data['per_page'] ?? 10);
+        return $this->returnData(true, 'Search Results', 200, $courses);
+    }
+
     // get all courses
     public function index()
     {
