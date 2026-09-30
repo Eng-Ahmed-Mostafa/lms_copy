@@ -26,11 +26,12 @@ class LessonContentRequest extends FormRequest
             "lesson_version_id" => ['required', 'exists:lesson_versions,id'],
             "type" => ['required', 'in:text,video,file'],
             "content" => ['nullable', 'string'],
-            "file_path" => ['nullable', 'string', 'max:1000'],
-            "video_url" => ['nullable', 'string', 'max:1000'],
+            "video_url" => ['nullable', 'string', 'max:1000', 'required_if:type,video'],
             "duration" => ['nullable', 'integer', 'min:0'],
+            "order" => ['nullable', 'integer'],
             "metadata" => ['nullable', 'array'],
             "metadata.*" => ['nullable'],
+            "file" => ['nullable', 'file', 'max:10240', 'required_if:type,file'],
         ];
     }
 }

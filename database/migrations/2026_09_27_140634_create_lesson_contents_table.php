@@ -14,9 +14,8 @@ return new class extends Migration
         Schema::create('lesson_contents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('lesson_version_id')->constrained('lesson_versions')->onDelete('cascade');
-            $table->enum('type', ['video', 'text', 'quiz', 'assignment']);
+            $table->enum('type', ['video', 'text', 'file']);
             $table->longText('content')->nullable();
-            $table->string('file_path', 1000)->nullable();
             $table->string('video_url', 1000)->nullable();
             $table->integer('duration')->default(0);
             $table->integer('order')->default(0);

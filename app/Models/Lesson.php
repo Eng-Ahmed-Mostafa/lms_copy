@@ -13,7 +13,6 @@ class Lesson extends Model
         'chapter_id',
         'title',
         'description',
-        'type',
         'duration',
         'order',
         'is_free',

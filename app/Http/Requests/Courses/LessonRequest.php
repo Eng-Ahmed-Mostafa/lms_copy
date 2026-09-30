@@ -26,7 +26,6 @@ class LessonRequest extends FormRequest
             "chapter_id" => [ 'required', 'exists:chapters,id' ],
             "title" => [ 'required', 'string', 'max:255' ],
             "description" => [ 'nullable', 'string' ],
-            "type" => [ 'nullable', 'string', 'max:255' ],
             "duration" => [ 'nullable', 'integer', 'min:0' ],
             "order" => [ 'nullable', 'integer' ],
             "is_free" => [ 'nullable', 'boolean' ],

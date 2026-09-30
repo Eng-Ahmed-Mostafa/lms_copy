@@ -73,7 +73,6 @@ class LessonVersionRepository implements LessonVersionInterface
         $lessonVersion->contents()->create([
             'type' => $data['type'] ?? null,
             'content' => $data['content'] ?? null,
-            'file_path' => $data['file_path'] ?? null,
             'video_url' => $data['video_url'] ?? null,
             'duration' => $data['duration'] ?? 0,
             'order' => $data['order'] ?? 0,

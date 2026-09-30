@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->enum('type', ['video', 'text', 'quiz'])->default('video');
             $table->integer('duration')->default(0);
             $table->integer('order')->default(0);
             $table->boolean('is_free')->default(false);
