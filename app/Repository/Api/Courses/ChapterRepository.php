@@ -10,6 +10,16 @@ class ChapterRepository implements ChapterInterface
 {
     use RepositoryTrait;
 
+    // search chapters
+    public function search(array $data)
+    {
+        $query = Chapter::search($data['q'] ?? '')
+            ->query(function ($query) use ($data) {
+                $query->with(['course', 'lessons']);
+            })->paginate($data['per_page'] ?? 10);
+        return $this->returnData(true, 'Chapters retrieved successfully', 200, $query);
+    }
+
     // get all chapters
     public function index()
     {

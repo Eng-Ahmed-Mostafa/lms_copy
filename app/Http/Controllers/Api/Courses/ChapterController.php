@@ -8,7 +8,7 @@ use App\Http\Requests\Courses\LessonRequest;
 use App\Http\Requests\Public\OrderRequest;
 use App\Interface\Api\Courses\ChapterInterface;
 use App\Trait\ResponseTrait;
-use Illuminate\Http\Request;
+use App\Http\Requests\Public\SearchRequest;
 
 class ChapterController extends Controller
 {
@@ -19,6 +19,15 @@ class ChapterController extends Controller
     public function __construct(ChapterInterface $chapterService)
     {
         $this->chapterService = $chapterService;
+    }
+
+    /**
+     * Search for chapters.
+     */
+    public function search(SearchRequest $request)
+    {
+        $result = $this->chapterService->search($request->validated());
+        return $this->finalResponse($result);
     }
 
     /**

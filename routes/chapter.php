@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'chapters', 'middleware' => ['auth:sanctum', 'verified']], function () {
     //? Chapter Routes Management
+    Route::get('/search', [ChapterController::class, 'search']);
     Route::get('/', [ChapterController::class, 'index']);
     Route::post('/', [ChapterController::class, 'store']);
     Route::get('/{id}', [ChapterController::class, 'show']);
