@@ -11,6 +11,16 @@ class LessonRepository implements LessonInterface
 {
     use RepositoryTrait;
 
+    // search lessons
+    public function search(array $data)
+    {
+        $query = Lesson::search($data['q'] ?? '')
+            ->query(function ($query) use ($data) {
+                $query->with(['chapter']);
+            })->paginate($data['per_page'] ?? 10);
+        return $this->returnData(true, 'Lessons retrieved successfully', 200, $query);
+    }
+
     // get all lessons
     public function index()
     {

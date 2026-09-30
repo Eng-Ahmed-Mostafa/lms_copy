@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Courses\LessonRequest;
 use App\Http\Requests\Courses\LessonVersionRequest;
 use App\Http\Requests\Public\OrderRequest;
+use App\Http\Requests\Public\SearchRequest;
 use App\Interface\Api\Courses\LessonInterface;
 use App\Trait\ResponseTrait;
 use Illuminate\Http\Request;
@@ -21,6 +22,14 @@ class LessonController extends Controller
         $this->lessonService = $lessonService;
     }
 
+    /**
+     * Search lessons based on query parameters.
+     */
+    public function search(SearchRequest $request)
+    {
+        $result = $this->lessonService->search($request->validated());
+        return $this->finalResponse($result);
+    }
 
     /**
      * Display a listing of the resource.

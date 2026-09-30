@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'lessons', 'middleware' => ['auth:sanctum', 'verified']], function () {
     //? Lesson Routes Management
+    Route::get('/search', [LessonController::class, 'search']);
     Route::get('/', [LessonController::class, 'index']);
     Route::post('/', [LessonController::class, 'store']);
     Route::get('/{id}', [LessonController::class, 'show']);
