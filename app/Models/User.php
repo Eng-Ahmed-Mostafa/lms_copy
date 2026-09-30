@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(
@@ -24,7 +26,6 @@ use Spatie\Permission\Traits\HasRoles;
     'email',
     'phone',
     'password',
-    'avatar',
     'gender',
     'date_of_birth',
     'status',
@@ -33,10 +34,10 @@ use Spatie\Permission\Traits\HasRoles;
 )]
 
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, InteractsWithMedia;
 
     /**
      * Get the attributes that should be cast.
@@ -124,5 +125,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function approvedLessons()
     {
         return $this->hasMany(LessonVersion::class, 'approved_by');
+    }
+
+    // Media Library
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatars')->singleFile();
     }
 }

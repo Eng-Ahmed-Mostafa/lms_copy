@@ -17,7 +17,7 @@ class UserRepository implements UserInterface
     public function index()
     {
         $users = User::get();
-        return $this->returnData(true, 'Users retrieved successfully', 200, $users);
+        return $this->returnData(true, 'Users retrieved successfully', 200, $users->load('media'));
     }
 
     //  create a new user
@@ -29,13 +29,16 @@ class UserRepository implements UserInterface
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
-            'avatar' => $data['avatar'] ?? null,
             'gender' => $data['gender'] ?? null,
             'date_of_birth' => $data['date_of_birth'] ?? null,
             'status' => $data['status'] ?? 'active',
         ]);
 
-        return $this->returnData(true, 'User created successfully', 201, $user);
+        if(!empty($data['avatar'])) {
+            $user->addMedia($data['avatar'])->toMediaCollection('avatars');
+        }
+
+        return $this->returnData(true, 'User created successfully', 201, $user->load('media'));
     }
 
     //  get a specific user by ID
@@ -45,7 +48,7 @@ class UserRepository implements UserInterface
         if(!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
-        return $this->returnData(true, 'User retrieved successfully', 200, $user);
+        return $this->returnData(true, 'User retrieved successfully', 200, $user->load('media'));
     }
 
     //  update a specific user by ID
@@ -57,9 +60,22 @@ class UserRepository implements UserInterface
             return $this->returnData(false, 'User not found', 404);
         }
 
-        $user->update($data);
+        $user->update([
+            'first_name' => $data['first_name'] ?? $user->first_name,
+            'last_name' => $data['last_name'] ?? $user->last_name,
+            'email' => $data['email'] ?? $user->email,
+            'phone' => $data['phone'] ?? $user->phone,
+            'password' => isset($data['password']) ? Hash::make($data['password']) : $user->password,
+            'gender' => $data['gender'] ?? $user->gender,
+            'date_of_birth' => $data['date_of_birth'] ?? $user->date_of_birth,
+            'status' => $data['status'] ?? $user->status,
+        ]);
 
-        return $this->returnData(true, 'User updated successfully', 200, $user);
+        if(!empty($data['avatar'])) {
+            $user->addMedia($data['avatar'])->toMediaCollection('avatars');
+        }
+
+        return $this->returnData(true, 'User updated successfully', 200, $user->load('media'));
     }
 
     //  delete a specific user by ID
@@ -70,6 +86,8 @@ class UserRepository implements UserInterface
             return $this->returnData(false, 'User not found', 404);
         }
 
+        $user->clearMediaCollection('avatars');
+
         $user->delete();
 
         return $this->returnData(true, 'User deleted successfully', 200);
@@ -79,6 +97,7 @@ class UserRepository implements UserInterface
     public function getUserRoles(string $id)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
@@ -92,11 +111,13 @@ class UserRepository implements UserInterface
     public function assignRoles(string $id, array $roleIds)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
 
         $roles =Role::whereIn('id', $roleIds)->pluck('name')->toArray();
+
         $user->assignRole($roles);
 
         return $this->returnData(true, 'Roles assigned to user successfully', 200);
@@ -106,11 +127,13 @@ class UserRepository implements UserInterface
     public function removeRole(string $id, string $roleId)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
 
         $role = Role::find($roleId);
+
         if (!$role) {
             return $this->returnData(false, 'Role not found', 404);
         }
@@ -124,6 +147,7 @@ class UserRepository implements UserInterface
     public function getUserPermissions(string $id)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
@@ -137,6 +161,7 @@ class UserRepository implements UserInterface
     public function getUserPreferences(string $id)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
@@ -150,6 +175,7 @@ class UserRepository implements UserInterface
     public function updateUserPreferences(string $id, array $preferences)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
@@ -172,55 +198,27 @@ class UserRepository implements UserInterface
     public function uploadAvatar(string $id, $avatar)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
 
-        // Delete old avatar
-        if ($user->avatar) {
-            $this->handleAvatarDeletion($user->avatar);
-        }
+        $user->addMedia($avatar)->toMediaCollection('avatars');
 
-        // Upload new avatar
-        $avatarPath = $this->handleAvatarUpload($avatar);
-
-        $user->avatar = $avatarPath;
-        $user->save();
-
-        return $this->returnData(true, 'User avatar uploaded successfully', 200, ['avatar' => $avatarPath]);
+        return $this->returnData(true, 'User avatar uploaded successfully', 200);
     }
 
     //  delete avatar for a specific user by ID
     public function deleteAvatar(string $id)
     {
         $user = User::find($id);
+
         if (!$user) {
             return $this->returnData(false, 'User not found', 404);
         }
 
-        if ($user->avatar) {
-            // Assuming you have a method to handle the avatar deletion
-            $this->handleAvatarDeletion($user->avatar);
-
-            $user->avatar = null;
-            $user->save();
-        }
+        $user->clearMediaCollection('avatars');
 
         return $this->returnData(true, 'User avatar deleted successfully', 200);
-    }
-
-    //  Handle avatar upload
-    private function handleAvatarUpload($avatar)
-    {
-        $path = $avatar->store('avatars', 'public');
-        return $path;
-    }
-
-    //  Handle avatar deletion
-    private function handleAvatarDeletion($avatarPath)
-    {
-        if ($avatarPath) {
-            Storage::disk('public')->delete($avatarPath);
-        }
     }
 }
