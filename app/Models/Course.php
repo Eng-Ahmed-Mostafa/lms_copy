@@ -90,6 +90,11 @@ class Course extends Model implements HasMedia
         return $this->belongsToMany(Student::class, 'course_student')->withTimestamps();
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
     // Media Collections
     public function registerMediaCollections(): void
     {

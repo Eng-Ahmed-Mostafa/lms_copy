@@ -127,6 +127,11 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         return $this->hasMany(LessonVersion::class, 'approved_by');
     }
 
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
     // Media Library
     public function registerMediaCollections(): void
     {
