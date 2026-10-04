@@ -15,6 +15,8 @@ use App\Interface\Api\Courses\LessonContentInterface;
 use App\Interface\Api\Courses\LessonInterface;
 use App\Interface\Api\Courses\LessonVersionInterface;
 use App\Interface\Api\Enrollment\EnrollmentInterface;
+use App\Interface\Api\LearningProgress\CourseProgressInterface;
+use App\Interface\Api\LearningProgress\LessonProgressInterface;
 use App\Interface\Api\People\GuardianInterface;
 use App\Interface\Api\People\StudentInterface;
 use App\Interface\Api\People\TeacherInterface;
@@ -34,6 +36,8 @@ use App\Repository\Api\Courses\LessonContentRepository;
 use App\Repository\Api\Courses\LessonRepository;
 use App\Repository\Api\Courses\LessonVersionRepository;
 use App\Repository\Api\Enrollment\EnrollmentRepository;
+use App\Repository\Api\LearningProgress\CourseProgressRepository;
+use App\Repository\Api\LearningProgress\LessonProgressRepository;
 use App\Repository\Api\People\GuardianRepository;
 use App\Repository\Api\People\StudentRepository;
 use App\Repository\Api\People\TeacherRepository;
@@ -142,6 +146,16 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             EnrollmentInterface::class,
             EnrollmentRepository::class
+        );
+
+        $this->app->bind(
+            LessonProgressInterface::class,
+            LessonProgressRepository::class
+        );
+
+        $this->app->bind(
+            CourseProgressInterface::class,
+            CourseProgressRepository::class
         );
     }
 

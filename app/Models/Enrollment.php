@@ -47,6 +47,16 @@ class Enrollment extends Model
         return $this->belongsTo(Course::class);
     }
 
+    public function lessonProgress()
+    {
+        return $this->hasMany(LessonProgress::class);
+    }
+
+    public function courseProgress()
+    {
+        return $this->hasOne(CourseProgress::class);
+    }
+
     // Status check methods
     public function isActive(): bool
     {

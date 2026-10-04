@@ -60,4 +60,19 @@ class Student extends Model
         return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id')
                     ->withTimestamps();
     }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function lessonProgress()
+    {
+        return $this->hasMany(LessonProgress::class);
+    }
+
+    public function courseProgress()
+    {
+        return $this->hasMany(CourseProgress::class);
+    }
 }

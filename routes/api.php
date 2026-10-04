@@ -20,3 +20,4 @@ require __DIR__.'/lesson.php';
 require __DIR__.'/lesson_version.php';
 require __DIR__.'/lesson_content.php';
 require __DIR__.'/enrollment.php';
+require __DIR__.'/learning_progress.php';
