@@ -7,6 +7,7 @@ use App\Interface\Api\Academic\ClassroomInterface;
 use App\Interface\Api\Academic\GradeInterface;
 use App\Interface\Api\Academic\SubjectInterface;
 use App\Interface\Api\Academic\TermInterface;
+use App\Interface\Api\Assessments\QuizInterface;
 use App\Interface\Api\Auth\AuthInterface;
 use App\Interface\Api\Courses\ChapterInterface;
 use App\Interface\Api\Courses\CourseCategoryInterface;
@@ -28,6 +29,7 @@ use App\Repository\Api\Academic\AcademicYearRepository;
 use App\Repository\Api\Academic\ClassroomRepository;
 use App\Repository\Api\Academic\GradeRepository;
 use App\Repository\Api\Academic\SubjectRepository;
+use App\Repository\Api\Assessments\QuizRepository;
 use App\Repository\Api\Auth\AuthRepository;
 use App\Repository\Api\Courses\ChapterRepository;
 use App\Repository\Api\Courses\CourseCategoryRepository;
@@ -156,6 +158,11 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             CourseProgressInterface::class,
             CourseProgressRepository::class
+        );
+
+        $this->app->bind(
+            QuizInterface::class,
+            QuizRepository::class
         );
     }
 
