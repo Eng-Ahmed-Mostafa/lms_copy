@@ -41,4 +41,9 @@ class Quiz extends Model
     {
         return $this->belongsTo(Lesson::class);
     }
+
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class, 'quiz_questions')->withPivot('order', 'points');
+    }
 }

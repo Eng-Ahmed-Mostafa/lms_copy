@@ -22,3 +22,5 @@ require __DIR__.'/lesson_content.php';
 require __DIR__.'/enrollment.php';
 require __DIR__.'/learning_progress.php';
 require __DIR__.'/quiz.php';
+require __DIR__.'/question.php';
+require __DIR__.'/option.php';
