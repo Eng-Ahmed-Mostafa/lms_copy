@@ -15,4 +15,12 @@ interface QuizInterface
     public function getQuizQuestions(string $quizId);
     public function addQuestionToQuiz(string $quizId, array $questionData);
     public function removeQuestionFromQuiz(string $quizId, string $questionId);
+
+    // quiz attempts
+    public function startQuizAttempt(string $quizId);
+    public function submitQuizAttempt(string $quizId);
+
+    // quiz results
+    public function getQuizAttempts(string $quizId);
+    public function getQuizStatistics(string $quizId);
 }

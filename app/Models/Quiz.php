@@ -46,4 +46,9 @@ class Quiz extends Model
     {
         return $this->belongsToMany(Question::class, 'quiz_questions')->withPivot('order', 'points');
     }
+
+    public function attempts()
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
 }

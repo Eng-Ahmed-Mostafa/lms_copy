@@ -128,4 +128,93 @@ class QuizRepository implements QuizInterface
         $question->delete();
         return $this->returnData(true, 'Question removed successfully.', 200, null);
     }
+
+    // start a quiz attempt
+    public function startQuizAttempt(string $quizId)
+    {
+        $quiz = Quiz::find($quizId);
+        if (!$quiz) {
+            return $this->returnData(false, 'Quiz not found.', 404, null);
+        }
+        $attempt = $quiz->attempts()->create([
+            'student_id' => Auth::id(),
+            'attempt_number' => $quiz->attempts()->where('student_id', Auth::id())->count() + 1,
+            'started_at' => now(),
+            'submitted_at' => null,
+            'score' => null,
+            'percentage' => null,
+            'passed' => null,
+            'status' => 'in_progress',
+        ]);
+        return $this->returnData(true, 'Quiz attempt started successfully.', 201, $attempt);
+    }
+
+    // submit a quiz attempt
+    public function submitQuizAttempt(string $quizId)
+    {
+        $quiz = Quiz::find($quizId);
+        if (!$quiz) {
+            return $this->returnData(false, 'Quiz not found.', 404, null);
+        }
+        $attempt = $quiz->attempts()->where('student_id', Auth::id())->where('status', 'in_progress')->first();
+        if (!$attempt) {
+            return $this->returnData(false, 'No in-progress attempt found for this quiz.', 404, null);
+        }
+        $attempt->update([
+            'submitted_at' => now(),
+            'score' => $this->calcScore($quiz),
+            'percentage' => $this->calcPercentage($quiz),
+            'passed' => $this->checkPass($quiz),
+            'status' => 'submitted',
+        ]);
+        return $this->returnData(true, 'Quiz attempt submitted successfully.', 200, $attempt);
+    }
+
+    // get all attempts for a specific quiz
+    public function getQuizAttempts(string $quizId)
+    {
+        $quiz = Quiz::find($quizId);
+        if (!$quiz) {
+            return $this->returnData(false, 'Quiz not found.', 404, null);
+        }
+
+        $attempts = $quiz->attempts()->where('student_id', Auth::id())->get();
+        return $this->returnData(true, 'Quiz attempts retrieved successfully.', 200, $attempts);
+    }
+
+    // get quiz statistics
+    public function getQuizStatistics(string $quizId)
+    {
+        $quiz = Quiz::find($quizId);
+        if (!$quiz) {
+            return $this->returnData(false, 'Quiz not found.', 404, null);
+        }
+
+        $totalAttempts = $quiz->attempts()->count();
+        $averageScore = $quiz->attempts()->avg('score');
+        $passCount = $quiz->attempts()->where('passed', true)->count();
+        $passRate = $totalAttempts > 0 ? ($passCount / $totalAttempts) * 100 : 0;
+        return $this->returnData(true, 'Quiz statistics retrieved successfully.', 200, [
+            'total_attempts' => $totalAttempts,
+            'average_score' => $averageScore,
+            'pass_rate' => $passRate,
+        ]);
+    }
+
+    //? Helper method
+    public function calcScore($quiz)
+    {
+        return $quiz->attempts()->avg('score');
+    }
+
+    public function calcPercentage($quiz)
+    {
+        return $quiz->attempts()->avg('percentage');
+    }
+
+    public function checkPass($quiz)
+    {
+        $passCount = $quiz->attempts()->where('passed', true)->count();
+        return $passCount > 0;
+    }
 }

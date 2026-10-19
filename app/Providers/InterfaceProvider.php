@@ -9,6 +9,7 @@ use App\Interface\Api\Academic\SubjectInterface;
 use App\Interface\Api\Academic\TermInterface;
 use App\Interface\Api\Assessments\OptionInterface;
 use App\Interface\Api\Assessments\QuestionInterface;
+use App\Interface\Api\Assessments\QuizAttemptInterface;
 use App\Interface\Api\Assessments\QuizInterface;
 use App\Interface\Api\Auth\AuthInterface;
 use App\Interface\Api\Courses\ChapterInterface;
@@ -33,6 +34,7 @@ use App\Repository\Api\Academic\GradeRepository;
 use App\Repository\Api\Academic\SubjectRepository;
 use App\Repository\Api\Assessments\OptionRepository;
 use App\Repository\Api\Assessments\QuestionRepository;
+use App\Repository\Api\Assessments\QuizAttemptRepository;
 use App\Repository\Api\Assessments\QuizRepository;
 use App\Repository\Api\Auth\AuthRepository;
 use App\Repository\Api\Courses\ChapterRepository;
@@ -177,6 +179,11 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             OptionInterface::class,
             OptionRepository::class
+        );
+
+        $this->app->bind(
+            QuizAttemptInterface::class,
+            QuizAttemptRepository::class
         );
     }
 

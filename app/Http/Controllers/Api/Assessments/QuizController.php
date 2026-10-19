@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Assessments;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Assessments\QuestionRequest;
+use App\Http\Requests\Assessments\QuizAttemptRequest;
 use App\Http\Requests\Assessments\QuizRequest;
 use App\Interface\Api\Assessments\QuizInterface;
 use App\Trait\ResponseTrait;
@@ -89,6 +90,42 @@ class QuizController extends Controller
     public function deleteQuestion(string $id, string $questionId)
     {
         $result = $this->quizService->removeQuestionFromQuiz($id, $questionId);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Start a quiz attempt for a specific quiz.
+     */
+    public function startAttempt(string $id)
+    {
+        $result = $this->quizService->startQuizAttempt($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Submit a quiz attempt for a specific quiz.
+     */
+    public function submitAttempt(string $id)
+    {
+        $result = $this->quizService->submitQuizAttempt($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get all attempts for a specific quiz.
+     */
+    public function getAttempts(string $id)
+    {
+        $result = $this->quizService->getQuizAttempts($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get statistics for a specific quiz.
+     */
+    public function getStatistics(string $id)
+    {
+        $result = $this->quizService->getQuizStatistics($id);
         return $this->finalResponse($result);
     }
 }
