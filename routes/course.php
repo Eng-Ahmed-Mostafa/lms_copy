@@ -23,10 +23,14 @@ Route::group(['prefix' => 'courses', 'middleware' => ['auth:sanctum', 'verified'
 
     //? Course Students Management
     Route::get('/{slug}/students', [CourseController::class, 'getStudentsByCourse']);
+    Route::get('/{slug}/enrollments', [CourseController::class, 'getEnrollmentsByCourse']);
 
     //? Course Status Management
     Route::post('/{slug}/submit-review', [CourseController::class, 'submitCourseForReview']);
     Route::post('/{slug}/published', [CourseController::class, 'publishCourse']);
     Route::post('/{slug}/unpublished', [CourseController::class, 'unpublishCourse']);
     Route::post('/{slug}/archived', [CourseController::class, 'archiveCourse']);
+
+    //? Course Statistics Management
+    Route::get('/{slug}/statistics', [CourseController::class, 'getCourseStatistics']);
 });

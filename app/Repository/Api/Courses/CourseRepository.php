@@ -165,6 +165,17 @@ class CourseRepository implements CourseInterface
         return $this->returnData(true, 'Students retrieved successfully', 200, $students);
     }
 
+    // get enrollments of a specific course
+    public function getEnrollmentsByCourse(string $slug)
+    {
+        $course = Course::where('slug', $slug)->first();
+        if (!$course) {
+            return $this->returnData(false, 'Course not found', 404, null);
+        }
+        $enrollments = $course->enrollments; // Assuming you have a relationship defined in the Course model
+        return $this->returnData(true, 'Enrollments retrieved successfully', 200, $enrollments);
+    }
+
     // submit a specific course for review
     public function submitCourseForReview(string $slug)
     {
@@ -207,5 +218,22 @@ class CourseRepository implements CourseInterface
         }
         $course->update(['status' => 'archived']);
         return $this->returnData(true, 'Course archived successfully', 200, $course);
+    }
+
+    // get statistics of a specific course
+    public function getCourseStatistics(string $slug)
+    {
+        $course = Course::where('slug', $slug)->first();
+        if (!$course) {
+            return $this->returnData(false, 'Course not found', 404, null);
+        }
+        $statistics = [
+            'enrollments' => $course->enrollments->count(),
+            'students' => $course->students->count(),
+            'chapters' => $course->chapters->count(),
+            'lessons' => $course->lessons->count(),
+            'quizzes' => $course->quizzes->count(),
+        ];
+        return $this->returnData(true, 'Course statistics retrieved successfully', 200, $statistics);
     }
 }

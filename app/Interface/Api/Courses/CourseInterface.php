@@ -21,10 +21,14 @@ interface CourseInterface
 
     // get students by course
     public function getStudentsByCourse(string $slug);
+    public function getEnrollmentsByCourse(string $slug);
 
     // publish, unpublish, archive operations
     public function submitCourseForReview(string $slug);
     public function publishCourse(string $slug);
     public function unpublishCourse(string $slug);
     public function archiveCourse(string $slug);
+
+    // get statistics of a course
+    public function getCourseStatistics(string $slug);
 }

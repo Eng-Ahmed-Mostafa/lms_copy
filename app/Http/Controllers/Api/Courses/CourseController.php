@@ -112,6 +112,15 @@ class CourseController extends Controller
     }
 
     /**
+     * Get enrollments of a specific course.
+     */
+    public function getEnrollmentsByCourse(string $slug)
+    {
+        $result = $this->courseService->getEnrollmentsByCourse($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
      * Submit a specific course for review.
      */
     public function submitCourseForReview(string $slug)
@@ -144,6 +153,15 @@ class CourseController extends Controller
     public function archiveCourse(string $slug)
     {
         $result = $this->courseService->archiveCourse($slug);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get statistics of a specific course.
+     */
+    public function getCourseStatistics(string $slug)
+    {
+        $result = $this->courseService->getCourseStatistics($slug);
         return $this->finalResponse($result);
     }
 }
