@@ -31,4 +31,19 @@ class Question extends Model
     {
         return $this->belongsToMany(Quiz::class, 'quiz_questions')->withPivot('order', 'points');
     }
+
+    public function createdBy()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function attempts()
+    {
+        return $this->hasMany(QuizAnswer::class);
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(QuizAnswer::class);
+    }
 }
