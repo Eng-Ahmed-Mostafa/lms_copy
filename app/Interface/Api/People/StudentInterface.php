@@ -13,5 +13,7 @@ interface StudentInterface
 
     // relationship operations
     public function getCourses(int $id);
+    public function getEnrollments(int $id);
     public function getTeachers(int $id);
+    public function getStatistics(int $id);
 }

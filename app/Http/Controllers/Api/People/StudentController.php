@@ -74,11 +74,29 @@ class StudentController extends Controller
     }
 
     /**
+     * Get enrollments associated with a specific student.
+     */
+    public function getEnrollments(string $id)
+    {
+        $result = $this->studentService->getEnrollments($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
      * Get teachers associated with a specific student.
      */
     public function getTeachers(string $id)
     {
         $result = $this->studentService->getTeachers($id);
+        return $this->finalResponse($result);
+    }
+
+    /**
+     * Get statistics associated with a specific student.
+     */
+    public function getStatistics(string $id)
+    {
+        $result = $this->studentService->getStatistics($id);
         return $this->finalResponse($result);
     }
 }

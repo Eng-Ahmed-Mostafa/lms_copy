@@ -86,6 +86,17 @@ class StudentRepository implements StudentInterface
         return $this->returnData(true, 'Courses retrieved successfully', 200, $courses);
     }
 
+    // get enrollments associated with a specific student
+    public function getEnrollments(int $id)
+    {
+        $student = Student::with('enrollments')->find($id);
+        if (!$student) {
+            return $this->returnData(false, 'Student not found', 404);
+        }
+        $enrollments = $student->enrollments;
+        return $this->returnData(true, 'Enrollments retrieved successfully', 200, $enrollments);
+    }
+
     // get teachers associated with a specific student
     public function getTeachers(int $id)
     {
@@ -95,5 +106,20 @@ class StudentRepository implements StudentInterface
         }
         $teachers = $student->teachers;
         return $this->returnData(true, 'Teachers retrieved successfully', 200, $teachers);
+    }
+
+    // get statistics associated with a specific student
+    public function getStatistics(int $id)
+    {
+        $student = Student::with('courses', 'enrollments', 'teachers')->find($id);
+        if (!$student) {
+            return $this->returnData(false, 'Student not found', 404);
+        }
+        $statistics = [
+            'total_courses' => $student->courses->count(),
+            'total_enrollments' => $student->enrollments->count(),
+            'total_teachers' => $student->teachers->count(),
+        ];
+        return $this->returnData(true, 'Statistics retrieved successfully', 200, $statistics);
     }
 }
