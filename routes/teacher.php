@@ -15,4 +15,7 @@ Route::group(['prefix' => 'teachers', 'middleware' => ['auth:sanctum', 'verified
     //? Additional Routes
     Route::get('/{id}/courses', [TeacherController::class, 'getCourses']);
     Route::get('/{id}/students', [TeacherController::class, 'getStudents']);
+
+    //? Statistics Route
+    Route::get('/{id}/statistics', [TeacherController::class, 'getStatistics']);
 });

@@ -98,4 +98,18 @@ class TeacherRepository implements TeacherInterface
         $students = $teacher->students;
         return $this->returnData(true, 'Students retrieved successfully', 200, $students);
     }
+
+    // get statistics for a specific teacher
+    public function getStatistics(int $id)
+    {
+        $teacher = Teacher::with('courses', 'students')->find($id);
+        if (!$teacher) {
+            return $this->returnData(false, 'Teacher not found', 404);
+        }
+        $statistics = [
+            'total_courses' => $teacher->courses->count(),
+            'total_students' => $teacher->students->count(),
+        ];
+        return $this->returnData(true, 'Statistics retrieved successfully', 200, $statistics);
+    }
 }

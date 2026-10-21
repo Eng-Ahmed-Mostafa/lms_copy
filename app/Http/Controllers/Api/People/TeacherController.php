@@ -80,4 +80,13 @@ class TeacherController extends Controller
         $result = $this->teacherService->getStudents($id);
         return $this->finalResponse($result);
     }
+
+    /**
+     * Get statistics for a specific teacher.
+     */
+    public function getStatistics(string $id)
+    {
+        $result = $this->teacherService->getStatistics($id);
+        return $this->finalResponse($result);
+    }
 }

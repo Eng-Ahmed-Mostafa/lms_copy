@@ -14,4 +14,7 @@ interface TeacherInterface
     // relationship operations
     public function getCourses(int $id);
     public function getStudents(int $id);
+
+    // statistics operations
+    public function getStatistics(int $id);
 }
