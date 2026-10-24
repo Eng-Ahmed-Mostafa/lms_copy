@@ -46,4 +46,9 @@ class Question extends Model
     {
         return $this->hasMany(QuizAnswer::class);
     }
+
+    public function exams()
+    {
+        return $this->belongsToMany(Exam::class, 'exam_questions')->withPivot('order', 'points');
+    }
 }

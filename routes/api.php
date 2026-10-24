@@ -25,3 +25,4 @@ require __DIR__.'/quiz.php';
 require __DIR__.'/question.php';
 require __DIR__.'/option.php';
 require __DIR__.'/quiz_attempt.php';
+require __DIR__.'/exam.php';
