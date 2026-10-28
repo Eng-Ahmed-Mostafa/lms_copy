@@ -38,4 +38,9 @@ class Exam extends Model
     {
         return $this->belongsToMany(Question::class, 'exam_questions')->withPivot('order', 'points');
     }
+
+    public function attempts()
+    {
+        return $this->hasMany(ExamAttempt::class);
+    }
 }

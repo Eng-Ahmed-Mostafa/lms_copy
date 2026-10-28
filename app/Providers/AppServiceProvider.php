@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\Enrollment;
+use App\Models\ExamAttempt;
+use App\Policies\Assessments\ExamAttemptPolicy;
 use App\Policies\Enrollment\EnrollmentPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -23,5 +25,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Enrollment::class, EnrollmentPolicy::class);
+        Gate::policy(ExamAttempt::class, ExamAttemptPolicy::class);
     }
 }

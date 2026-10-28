@@ -51,4 +51,9 @@ class Question extends Model
     {
         return $this->belongsToMany(Exam::class, 'exam_questions')->withPivot('order', 'points');
     }
+
+    public function examAnswers()
+    {
+        return $this->hasMany(ExamAnswer::class);
+    }
 }

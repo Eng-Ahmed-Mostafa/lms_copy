@@ -3,120 +3,116 @@
 namespace App\Http\Controllers\Api\Assessments;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Assessments\StoreExamRequest;
+use App\Http\Requests\Api\Assessments\UpdateExamRequest;
 use App\Http\Requests\Assessments\ExamQuestionRequest;
 use App\Http\Requests\Assessments\ExamRequest;
+use App\Http\Resources\Api\Assessments\ExamResource;
 use App\Interface\Api\Assessments\ExamInterface;
+use App\Models\Exam;
+use App\Services\Assessments\ExamService;
+use App\Services\Assessments\ExamStatisticsService;
 use App\Trait\ResponseTrait;
 use Illuminate\Http\Request;
 
 class ExamController extends Controller
 {
-    use ResponseTrait;
+    public function __construct(
+        private readonly ExamService $examService,
+        private readonly ExamStatisticsService $examStatisticsService,
+    ) {}
 
-    private ?ExamInterface $examService;
-
-    public function __construct(ExamInterface $examService)
+    public function index(Request $request)
     {
-        $this->examService = $examService;
+        $this->authorize('viewAny', Exam::class);
+
+        $exams = $this->examService->index($request->only(['course_id', 'status', 'per_page']));
+
+        return ExamResource::collection($exams)->additional([
+            'meta' => [
+                'total' => $exams->total(),
+                'per_page' => $exams->perPage(),
+                'current_page' => $exams->currentPage(),
+                'last_page' => $exams->lastPage(),
+            ],
+        ]);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function store(StoreExamRequest $request)
     {
-        $results = $this->examService->index();
-        return $this->finalResponse($results);
+        $this->authorize('create', Exam::class);
+
+        $exam = $this->examService->create($request->validated());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Exam created successfully.',
+            'data' => new ExamResource($exam),
+        ], 201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(ExamRequest $request)
+    public function show(Exam $exam)
     {
-        $results = $this->examService->create($request->validated());
-        return $this->finalResponse($results);
+        $this->authorize('view', $exam);
+
+        $exam = $this->examService->show($exam->id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Exam retrieved successfully.',
+            'data' => new ExamResource($exam),
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(UpdateExamRequest $request, Exam $exam)
     {
-        $results = $this->examService->show($id);
-        return $this->finalResponse($results);
+        $this->authorize('update', $exam);
+
+        $exam = $this->examService->update($exam->id, $request->validated());
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Exam updated successfully.',
+            'data' => new ExamResource($exam),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(ExamRequest $request, string $id)
+    public function destroy(Exam $exam)
     {
-        $results = $this->examService->update($request->validated(), $id);
-        return $this->finalResponse($results);
+        $this->authorize('delete', $exam);
+
+        $this->examService->delete($exam->id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Exam deleted successfully.',
+            'data' => null,
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function publish(Exam $exam)
     {
-        $results = $this->examService->destroy($id);
-        return $this->finalResponse($results);
+        $this->authorize('publish', $exam);
+
+        $exam = $this->examService->publish($exam->id);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Exam published successfully.',
+            'data' => new ExamResource($exam),
+        ]);
     }
 
-    /**
-     * Get the questions for a specific exam.
-     */
-    public function getExamQuestions(string $id)
+    public function statistics(Exam $exam)
     {
-        $results = $this->examService->getExamQuestions($id);
-        return $this->finalResponse($results);
-    }
+        $this->authorize('viewStatistics', $exam);
 
-    /**
-     * Add a question to a specific exam.
-     */
-    public function addExamQuestion(ExamQuestionRequest $request, string $id)
-    {
-        $results = $this->examService->addExamQuestion($request->validated(), $id);
-        return $this->finalResponse($results);
-    }
+        $statistics = $this->examStatisticsService->get($exam->id);
 
-    /**
-     * Remove a question from a specific exam.
-     */
-    public function removeExamQuestion(string $id, string $questionId)
-    {
-        $results = $this->examService->removeExamQuestion($id, $questionId);
-        return $this->finalResponse($results);
-    }
-
-
-    /**
-     * Start a specific exam.
-     */
-    public function startExam(string $id)
-    {
-        $results = $this->examService->start($id);
-        return $this->finalResponse($results);
-    }
-
-    /**
-     * Submit a specific exam.
-     */
-    public function submitExam(Request $request, string $id)
-    {
-        $results = $this->examService->submit($request, $id);
-        return $this->finalResponse($results);
-    }
-
-    /**
-     * Get the statistics for a specific exam.
-     */
-    public function getExamStatistics(string $id)
-    {
-        $results = $this->examService->getExamStatistics($id);
-        return $this->finalResponse($results);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Exam statistics retrieved successfully.',
+            'data' => $statistics,
+        ]);
     }
 }

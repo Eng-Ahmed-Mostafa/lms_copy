@@ -28,4 +28,9 @@ class Option extends Model
     {
         return $this->hasMany(QuizAnswer::class, 'question_option_id');
     }
+
+    public function examAnswers()
+    {
+        return $this->hasMany(ExamAnswer::class, 'question_option_id');
+    }
 }

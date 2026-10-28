@@ -7,7 +7,9 @@ use App\Interface\Api\Academic\ClassroomInterface;
 use App\Interface\Api\Academic\GradeInterface;
 use App\Interface\Api\Academic\SubjectInterface;
 use App\Interface\Api\Academic\TermInterface;
+use App\Interface\Api\Assessments\ExamAttemptInterface;
 use App\Interface\Api\Assessments\ExamInterface;
+use App\Interface\Api\Assessments\ExamQuestionInterface;
 use App\Interface\Api\Assessments\OptionInterface;
 use App\Interface\Api\Assessments\QuestionInterface;
 use App\Interface\Api\Assessments\QuizAttemptInterface;
@@ -33,6 +35,8 @@ use App\Repository\Api\Academic\AcademicYearRepository;
 use App\Repository\Api\Academic\ClassroomRepository;
 use App\Repository\Api\Academic\GradeRepository;
 use App\Repository\Api\Academic\SubjectRepository;
+use App\Repository\Api\Assessments\ExamAttemptRepository;
+use App\Repository\Api\Assessments\ExamQuestionRepository;
 use App\Repository\Api\Assessments\ExamRepository;
 use App\Repository\Api\Assessments\OptionRepository;
 use App\Repository\Api\Assessments\QuestionRepository;
@@ -191,6 +195,16 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             ExamInterface::class,
             ExamRepository::class
+        );
+
+        $this->app->bind(
+            ExamAttemptInterface::class,
+            ExamAttemptRepository::class
+        );
+
+        $this->app->bind(
+            ExamQuestionInterface::class,
+            ExamQuestionRepository::class
         );
     }
 
