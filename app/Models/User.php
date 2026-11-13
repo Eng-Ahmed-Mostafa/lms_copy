@@ -15,21 +15,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Permission\Traits\HasRoles;
 
 #[Fillable(
     [
-    'first_name',
-    'last_name',
-    'email',
-    'phone',
-    'password',
-    'gender',
-    'date_of_birth',
-    'status',
-    'last_login_at',
+        'first_name',
+        'last_name',
+        'email',
+        'phone',
+        'password',
+        'gender',
+        'date_of_birth',
+        'status',
+        'last_login_at',
     ]
 )]
 
@@ -63,7 +64,6 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         static::created(function ($user) {
 
             $user->preferences()->create();
-
         });
     }
 
@@ -136,5 +136,15 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('avatars')->singleFile();
+    }
+
+    /**
+     * Accessors & Mutators
+     */
+    protected function fullName(): Attribute
+    {
+        return Attribute::get(
+            fn() => trim("{$this->first_name} {$this->last_name}")
+        );
     }
 }

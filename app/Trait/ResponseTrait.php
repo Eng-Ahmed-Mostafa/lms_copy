@@ -31,11 +31,11 @@ trait ResponseTrait
     /**
      * Return final Result if success or error
      */
-    public function finalResponse(array $result) {
+    public function finalResponse(array $result, $data = null) {
         if (!$result['success']) {
             return $this->errorResponse($result['message'], $result['code']);
         }
 
-        return $this->successResponse($result['data'], $result['message'], $result['code']);
+        return $this->successResponse($data ?? $result['data'], $result['message'], $result['code']);
     }
 }

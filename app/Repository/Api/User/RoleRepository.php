@@ -2,6 +2,7 @@
 
 namespace App\Repository\Api\User;
 use App\Interface\Api\User\RoleInterface;
+use App\Models\User;
 use App\Trait\RepositoryTrait;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
@@ -13,53 +14,55 @@ class RoleRepository implements RoleInterface
     // get all roles
     public function index()
     {
-        $roles = Role::get();
-        return $this->returnData(true, 'Roles retrieved successfully', 200, $roles);
+        return Role::get();
     }
 
     // create a new role
     public function store(array $data)
     {
-        $role = Role::create([
+        return Role::create([
             'name' => $data['name'],
             'guard_name' => $data['guard_name'] ?? 'sanctum',
         ]);
-        return $this->returnData(true, 'Role created successfully', 201, $role);
     }
 
     // get a specific role by ID
     public function show(string $id)
     {
-        $role = Role::find($id);
-        if (!$role) {
-            return $this->returnData(false, 'Role not found', 404);
-        }
-        return $this->returnData(true, 'Role retrieved successfully', 200, $role);
+        return Role::find($id);
     }
 
     // update a specific role by ID
-    public function update(string $id, array $data)
+    public function update(Role $role, array $data)
     {
-        $role = Role::find($id);
-        if (!$role) {
-            return $this->returnData(false, 'Role not found', 404);
-        }
-        $role->update([
+        return $role->update([
             'name' => $data['name'],
             'guard_name' => $data['guard_name'] ?? 'sanctum',
         ]);
-        return $this->returnData(true, 'Role updated successfully', 200, $role);
     }
 
     // delete a specific role by ID
-    public function destroy(string $id)
+    public function destroy(Role $role)
     {
-        $role = Role::find($id);
-        if (!$role) {
-            return $this->returnData(false, 'Role not found', 404);
-        }
         $role->delete();
-        return $this->returnData(true, 'Role deleted successfully', 200);
+    }
+
+    // get roles names by IDs
+    public function getRolesNamesByIds(array $rolesIds) {
+        return Role::whereIn('id', $rolesIds)->pluck('name')->toArray();
+
+    }
+
+    // assign roles to a user
+    public function assignRolesToUser(User $user, array $rolesIds) {
+        $user->syncRoles($rolesIds);
+        return $user->getRoleNames();
+    }
+
+    // remove a role from a user
+    public function removeRolesFromUser(User $user, Role $role) {
+        $user->removeRole($role);
+        return $user->getRoleNames();
     }
 
     // Role Permissions Management

@@ -4,24 +4,17 @@ namespace App\Repository\Api\User;
 
 use App\Interface\Api\User\UserInterface;
 use App\Models\User;
-use App\Trait\RepositoryTrait;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\Storage;
+use Override;
 
 class UserRepository implements UserInterface
 {
-    use RepositoryTrait;
-
-    //  get all users
-    public function index()
+    public function getAllUsers()
     {
-        $users = User::get();
-        return $this->returnData(true, 'Users retrieved successfully', 200, $users->load('media'));
+        return User::all();
     }
 
-    //  create a new user
-    public function store(array $data)
+    public function createUser(array $data): User
     {
         $user = User::create([
             'first_name' => $data['first_name'],
@@ -38,148 +31,43 @@ class UserRepository implements UserInterface
             $user->addMedia($data['avatar'])->toMediaCollection('avatars');
         }
 
-        return $this->returnData(true, 'User created successfully', 201, $user->load('media'));
+        return $user;
     }
 
-    //  get a specific user by ID
-    public function show(string $id)
+    public function getUserByEmail(string $email)
     {
-        $user = User::find($id);
-        if(!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-        return $this->returnData(true, 'User retrieved successfully', 200, $user->load('media'));
+        return User::where('email', $email)->first();
     }
 
-    //  update a specific user by ID
-    public function update(string $id, array $data)
+    public function getUserById(string $id)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
-        $user->update([
-            'first_name' => $data['first_name'] ?? $user->first_name,
-            'last_name' => $data['last_name'] ?? $user->last_name,
-            'email' => $data['email'] ?? $user->email,
-            'phone' => $data['phone'] ?? $user->phone,
-            'password' => isset($data['password']) ? Hash::make($data['password']) : $user->password,
-            'gender' => $data['gender'] ?? $user->gender,
-            'date_of_birth' => $data['date_of_birth'] ?? $user->date_of_birth,
-            'status' => $data['status'] ?? $user->status,
-        ]);
-
-        if(!empty($data['avatar'])) {
-            $user->addMedia($data['avatar'])->toMediaCollection('avatars');
-        }
-
-        return $this->returnData(true, 'User updated successfully', 200, $user->load('media'));
+        return User::find($id);
     }
 
-    //  delete a specific user by ID
-    public function destroy(string $id)
+    public function updateUser(User $user, array $data)
     {
-        $user = User::find($id);
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
+        $user->update($data);
 
-        $user->clearMediaCollection('avatars');
-
-        $user->delete();
-
-        return $this->returnData(true, 'User deleted successfully', 200);
+        return $user;
     }
 
-    //  get roles of a specific user by ID
-    public function getUserRoles(string $id)
+    public function deleteUser(User $user)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
-        $roles = $user->getRoleNames();
-
-        return $this->returnData(true, 'User roles retrieved successfully', 200, $roles);
+        return $user->delete();
     }
 
-    //  assign roles to a specific user by ID
-    public function assignRoles(string $id, array $roleIds)
+    public function getMeDetails(User $user)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
-        $roles =Role::whereIn('id', $roleIds)->pluck('name')->toArray();
-
-        $user->assignRole($roles);
-
-        return $this->returnData(true, 'Roles assigned to user successfully', 200);
+        return $user->load('media');
     }
 
-    //  remove a role from a specific user by ID
-    public function removeRole(string $id, string $roleId)
+    public function getUserPreferences(User $user)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
-        $role = Role::find($roleId);
-
-        if (!$role) {
-            return $this->returnData(false, 'Role not found', 404);
-        }
-
-        $user->removeRole($role);
-
-        return $this->returnData(true, 'Role removed from user successfully', 200);
+        return $user->preferences()->first();
     }
 
-    //  get permissions of a specific user by ID
-    public function getUserPermissions(string $id)
+    public function updateUserPreferences(User $user, array $preferences)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
-        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
-
-        return $this->returnData(true, 'User permissions retrieved successfully', 200, $permissions);
-    }
-
-    //  get preferences of a specific user by ID
-    public function getUserPreferences(string $id)
-    {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
-        $preferences = $user->preferences()->first(); // Assuming preferences is a JSON column in the users table
-
-        return $this->returnData(true, 'User preferences retrieved successfully', 200, $preferences);
-    }
-
-    //  update preferences of a specific user by ID
-    public function updateUserPreferences(string $id, array $preferences)
-    {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
         $data = [
             'language' => $preferences['language'] ?? $user->preferences->language,
             'theme' => $preferences['theme'] ?? $user->preferences->theme,
@@ -189,36 +77,17 @@ class UserRepository implements UserInterface
             'push_notifications' => $preferences['push_notifications'] ?? $user->preferences->push_notifications,
         ];
 
-        $user->preferences()->update($data);
-
-        return $this->returnData(true, 'User preferences updated successfully', 200, $data);
+        $user->preferences()->updateOrCreate(['user_id' => $user->id], $data);
     }
 
-    //  upload avatar for a specific user by ID
-    public function uploadAvatar(string $id, $avatar)
+    public function uploadUserAvatar(User $user, $avatar)
     {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
-        $user->addMedia($avatar)->toMediaCollection('avatars');
-
-        return $this->returnData(true, 'User avatar uploaded successfully', 200);
-    }
-
-    //  delete avatar for a specific user by ID
-    public function deleteAvatar(string $id)
-    {
-        $user = User::find($id);
-
-        if (!$user) {
-            return $this->returnData(false, 'User not found', 404);
-        }
-
         $user->clearMediaCollection('avatars');
+        $user->addMedia($avatar)->toMediaCollection('avatars');
+    }
 
-        return $this->returnData(true, 'User avatar deleted successfully', 200);
+    public function deleteUserAvatar(User $user)
+    {
+        $user->clearMediaCollection('avatars');
     }
 }

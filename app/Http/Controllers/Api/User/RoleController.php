@@ -3,27 +3,25 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\PermissionRequest;
+use App\Http\Requests\User\RoleIdsRequest;
 use App\Http\Requests\User\RoleRequest;
-use App\Interface\Api\User\RoleInterface;
+use App\Models\User;
+use App\Services\User\RoleServices;
 use App\Trait\ResponseTrait;
+use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
     use ResponseTrait;
 
-    protected ?RoleInterface $roleService;
-
-    public function __construct(RoleInterface $roleService)
-    {
-        $this->roleService = $roleService;
-    }
+    public function __construct(private readonly RoleServices $roleService) {}
 
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->authorize('viewAny', Role::class);
         $result = $this->roleService->index();
         return $this->finalResponse($result);
     }
@@ -33,6 +31,7 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        $this->authorize('create', Role::class);
         $result = $this->roleService->store($request->validated());
         return $this->finalResponse($result);
     }
@@ -40,45 +39,58 @@ class RoleController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Role $role)
     {
-        $result = $this->roleService->show($id);
+        $this->authorize('view', $role);
+        $result = $this->roleService->show($role->id);
         return $this->finalResponse($result);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(RoleRequest $request, string $id)
+    public function update(RoleRequest $request, Role $role)
     {
-        $result = $this->roleService->update($id, $request->validated());
+        $this->authorize('update', $role);
+        $result = $this->roleService->update($role->id, $request->validated());
         return $this->finalResponse($result);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Role $role)
     {
-        $result = $this->roleService->destroy($id);
+        $this->authorize('delete', $role);
+        $result = $this->roleService->destroy($role->id);
         return $this->finalResponse($result);
     }
 
-    public function getPermissions(string $id)
+    /**
+     * Get the roles names by their IDs.
+     */
+    public function getRolesNamesByUserId(User $user)
     {
-        $result = $this->roleService->getPermissions($id);
+        $this->authorize('viewAny', $user);
+        $result = $this->roleService->getRolesNamesByUserId($user->id);
         return $this->finalResponse($result);
     }
 
-    public function assignPermissions(PermissionRequest $request, string $id)
-    {
-        $result = $this->roleService->assignPermissions($id, $request->validated());
+    /**
+     * Assign roles to a user.
+     */
+    public function assignRolesToUser(RoleIdsRequest $request, User $user) {
+        $this->authorize('assignRoles', $user);
+        $result = $this->roleService->assignRolesToUser($user->id, $request->validated());
         return $this->finalResponse($result);
     }
 
-    public function removePermissions(string $id, string $permission)
-    {
-        $result = $this->roleService->removePermissions($id, $permission);
+    /**
+     * remove a role from a user.
+     */
+    public function removeRolesFromUser(User $user, string $roleId) {
+        $this->authorize('removeRoles', $user);
+        $result = $this->roleService->removeRolesFromUser($user->id, $roleId);
         return $this->finalResponse($result);
     }
 }

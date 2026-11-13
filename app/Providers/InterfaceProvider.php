@@ -7,6 +7,7 @@ use App\Interface\Api\Academic\ClassroomInterface;
 use App\Interface\Api\Academic\GradeInterface;
 use App\Interface\Api\Academic\SubjectInterface;
 use App\Interface\Api\Academic\TermInterface;
+use App\Interface\Api\Access\DeviceInterface;
 use App\Interface\Api\Assessments\ExamAttemptInterface;
 use App\Interface\Api\Assessments\ExamInterface;
 use App\Interface\Api\Assessments\ExamQuestionInterface;
@@ -14,7 +15,9 @@ use App\Interface\Api\Assessments\OptionInterface;
 use App\Interface\Api\Assessments\QuestionInterface;
 use App\Interface\Api\Assessments\QuizAttemptInterface;
 use App\Interface\Api\Assessments\QuizInterface;
-use App\Interface\Api\Auth\AuthInterface;
+use App\Interface\Api\Auth\LoginAttemptInterface;
+use App\Interface\Api\Auth\PasswordInterface;
+use App\Interface\Api\Auth\TokenInterface;
 use App\Interface\Api\Courses\ChapterInterface;
 use App\Interface\Api\Courses\CourseCategoryInterface;
 use App\Interface\Api\Courses\CourseInterface;
@@ -35,6 +38,7 @@ use App\Repository\Api\Academic\AcademicYearRepository;
 use App\Repository\Api\Academic\ClassroomRepository;
 use App\Repository\Api\Academic\GradeRepository;
 use App\Repository\Api\Academic\SubjectRepository;
+use App\Repository\Api\Access\DeviceRepository;
 use App\Repository\Api\Assessments\ExamAttemptRepository;
 use App\Repository\Api\Assessments\ExamQuestionRepository;
 use App\Repository\Api\Assessments\ExamRepository;
@@ -43,6 +47,9 @@ use App\Repository\Api\Assessments\QuestionRepository;
 use App\Repository\Api\Assessments\QuizAttemptRepository;
 use App\Repository\Api\Assessments\QuizRepository;
 use App\Repository\Api\Auth\AuthRepository;
+use App\Repository\Api\Auth\LoginAttemptRepository;
+use App\Repository\Api\Auth\PasswordRepository;
+use App\Repository\Api\Auth\TokenRepository;
 use App\Repository\Api\Courses\ChapterRepository;
 use App\Repository\Api\Courses\CourseCategoryRepository;
 use App\Repository\Api\Courses\CourseRepository;
@@ -68,8 +75,8 @@ class InterfaceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            AuthInterface::class,
-            AuthRepository::class
+            DeviceInterface::class,
+            DeviceRepository::class
         );
 
         $this->app->bind(
@@ -85,6 +92,21 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             PermissionInterface::class,
             PermissionRepository::class
+        );
+
+        $this->app->bind(
+            LoginAttemptInterface::class,
+            LoginAttemptRepository::class
+        );
+
+        $this->app->bind(
+            PasswordInterface::class,
+            PasswordRepository::class
+        );
+
+        $this->app->bind(
+            TokenInterface::class,
+            TokenRepository::class
         );
 
         $this->app->bind(

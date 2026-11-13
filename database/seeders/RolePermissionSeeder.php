@@ -706,6 +706,7 @@ class RolePermissionSeeder extends Seeder
 
             'permissions.view',
             'permissions.assign',
+            'permissions.remove',
 
             'devices.view',
             'devices.revoke',

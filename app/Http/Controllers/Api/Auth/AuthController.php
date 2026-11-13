@@ -3,114 +3,93 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\ForgetPasswordRequest;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Requests\Auth\ResetPasswordRequest;
-use App\Interface\Api\Auth\AuthInterface;
-use App\Trait\ResponseTrait;
+use App\Http\Resources\User\UserResource;
+use App\Services\Access\DeviceServices;
+use App\Services\Auth\AuthServices;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    use ResponseTrait;
-    protected ?AuthInterface $authService;
+    public function __construct(
+        private AuthServices $authServices,
+        private DeviceServices $deviceServices
+    ) {}
 
-    public function __construct(AuthInterface $authService)
-    {
-        $this->authService = $authService;
-    }
-
-    // register a new user
+    //  register a new user and send email verification
     public function register(RegisterRequest $request)
     {
-        $result = $this->authService->register($request->validated());
+        $device = $request->device();
 
-        return $this->finalResponse($result);
+        $deviceData = $this->deviceServices->getDeviceDataFromDevice($device);
+
+        $data = $request->validated();
+
+        $result = $this->authServices->registerUser($data, $deviceData);
+
+        if (!$result['user']) {
+            return response()->json([
+                'message' => 'User registration failed',
+            ], 500);
+        }
+
+        return UserResource::make($result['user'])->additional([
+            'token' => $result['token'],
+        ]);
     }
 
-    // login a user and return a token
+    // login user and create a new token for the user and associate it with the device
     public function login(LoginRequest $request)
     {
-        $result = $this->authService->login($request->validated());
+        $device = $request->device();
 
-        return $this->finalResponse($result);
+        $deviceData = $this->deviceServices->getDeviceDataFromDevice($device);
+
+        $data = $request->validated();
+
+        $result = $this->authServices->loginUser($data, $deviceData);
+
+        if (!$result['user']) {
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 401);
+        }
+
+        return UserResource::make($result['user'])->additional([
+            'token' => $result['token'],
+        ]);
     }
 
-    // logout a user and invalidate the token
+    // logout user and revoke the token
     public function logout(Request $request)
     {
-        $result = $this->authService->logout($request);
-        return $this->finalResponse($result);
+        $result = $this->authServices->logoutUser($request);
+
+        if (!$result) {
+            return response()->json([
+                'message' => 'Logout failed',
+            ], 500);
+        }
+
+        return response()->json([
+            'message' => 'Logout successful',
+        ]);
     }
 
-    // refresh the token
-    public function refreshToken()
-    {
-        $result = $this->authService->refreshToken();
-        return $this->finalResponse($result);
-    }
-
-    // get the authenticated user's details
+    // me endpoint to get the authenticated user's details
     public function me(Request $request)
     {
-        $result = $this->authService->me($request);
-        return $this->finalResponse($result);
+        $result = $this->authServices->me($request);
+
+        if (!$result) {
+            return response()->json([
+                'message' => 'Failed to retrieve user details',
+            ], 500);
+        }
+
+        return UserResource::make($result['user']);
     }
 
-    // send a password reset link to the user
-    public function forgotPassword(ForgetPasswordRequest $request)
-    {
-        $result = $this->authService->forgotPassword($request->validated()['email']);
 
-        return $this->finalResponse($result);
-    }
-
-    // reset the user's password
-    public function resetPassword(ResetPasswordRequest $request)
-    {
-        $result = $this->authService->resetPassword($request->validated());
-        return $this->finalResponse($result);
-    }
-
-    // verify the user's email
-    public function verifyEmail(Request $request)
-    {
-        $result = $this->authService->verifyEmail($request->route('id'), $request->route('hash'));
-
-        return $this->finalResponse($result);
-    }
-
-    // resend the email verification link to the user
-    public function resendVerificationEmail(Request $request)
-    {
-        $validated = $request->validate([
-            'email' => 'required|email|exists:users,email',
-        ]);
-
-        $result = $this->authService->resendVerificationEmail($validated['email']);
-        return $this->finalResponse($result);
-    }
-
-    // get the authenticated user's devices
-    public function getUserDevices()
-    {
-        $result = $this->authService->getUserDevices();
-        return $this->finalResponse($result);
-    }
-
-    // revoke a specific device for the authenticated user
-    public function revokeDevice(string $deviceId)
-    {
-        $result = $this->authService->revokeDevice($deviceId);
-        return $this->finalResponse($result);
-    }
-
-    // revoke all devices for the authenticated user
-    public function revokeAllDevices()
-    {
-        $result = $this->authService->revokeAllDevices();
-        return $this->finalResponse($result);
-    }
 }

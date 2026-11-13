@@ -30,10 +30,6 @@ class RegisterRequest extends FormRequest
             'avatar' => ['nullable', 'image', 'max:2048'],
             'gender' => ['nullable', 'in:male,female'],
             'date_of_birth' => ['nullable', 'date'],
-            'status' => ['nullable', 'in:pending,active,inactive,suspended,banned'],
-            'email_verified_at' => ['nullable', 'date'],
-            'phone_verified_at' => ['nullable', 'date'],
-            'last_login_at' => ['nullable', 'date'],
         ];
     }
 }
