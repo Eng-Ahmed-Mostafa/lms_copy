@@ -110,6 +110,11 @@ class Course extends Model implements HasMedia
         return $this->hasMany(Exam::class);
     }
 
+    public function assignments()
+    {
+        return $this->hasMany(Assignment::class);
+    }
+
     // Media Collections
     public function registerMediaCollections(): void
     {

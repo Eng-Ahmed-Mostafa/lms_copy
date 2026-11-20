@@ -15,6 +15,7 @@ use App\Interface\Api\Assessments\OptionInterface;
 use App\Interface\Api\Assessments\QuestionInterface;
 use App\Interface\Api\Assessments\QuizAttemptInterface;
 use App\Interface\Api\Assessments\QuizInterface;
+use App\Interface\Api\Assignments\AssignmentInterface;
 use App\Interface\Api\Auth\LoginAttemptInterface;
 use App\Interface\Api\Auth\PasswordInterface;
 use App\Interface\Api\Auth\TokenInterface;
@@ -46,6 +47,7 @@ use App\Repository\Api\Assessments\OptionRepository;
 use App\Repository\Api\Assessments\QuestionRepository;
 use App\Repository\Api\Assessments\QuizAttemptRepository;
 use App\Repository\Api\Assessments\QuizRepository;
+use App\Repository\Api\Assignments\AssignmentRepository;
 use App\Repository\Api\Auth\AuthRepository;
 use App\Repository\Api\Auth\LoginAttemptRepository;
 use App\Repository\Api\Auth\PasswordRepository;
@@ -227,6 +229,11 @@ class InterfaceProvider extends ServiceProvider
         $this->app->bind(
             ExamQuestionInterface::class,
             ExamQuestionRepository::class
+        );
+
+        $this->app->bind(
+            AssignmentInterface::class,
+            AssignmentRepository::class
         );
     }
 

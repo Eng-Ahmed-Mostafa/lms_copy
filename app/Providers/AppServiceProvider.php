@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Assignment;
 use App\Models\Enrollment;
 use App\Models\ExamAttempt;
 use App\Models\User;
@@ -10,6 +11,7 @@ use Spatie\Permission\Models\Role;
 use App\Policies\Auth\PermissionPolicy;
 use App\Policies\Auth\RolePolicy;
 use App\Policies\Assessments\ExamAttemptPolicy;
+use App\Policies\Assignments\AssignmentPolicy;
 use App\Policies\Enrollment\EnrollmentPolicy;
 use App\Policies\User\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -35,5 +37,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Permission::class, PermissionPolicy::class);
         Gate::policy(Enrollment::class, EnrollmentPolicy::class);
         Gate::policy(ExamAttempt::class, ExamAttemptPolicy::class);
+        Gate::policy(Assignment::class, AssignmentPolicy::class);
     }
 }
